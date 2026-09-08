@@ -1,0 +1,16 @@
+# Root-level safety net on top of each app's own .gitignore (storefront/,
+# admin/) — belt and suspenders so secrets can never accidentally get
+# committed regardless of which directory a git command runs from.
+
+node_modules/
+.next/
+.env*
+!.env.local.example
+
+# OS/editor cruft
+.DS_Store
+*.log
+
+# Claude Code session-local state — not project code
+.claude/scheduled_tasks.lock
+.claude/settings.local.json

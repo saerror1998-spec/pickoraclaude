@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/*
+ * Pickora Admin is a deliberately dark-first surface (an operations tool,
+ * not a themeable public page), so tokens are defined directly rather than
+ * split across light/dark media blocks.
+ */
+:root {
+  --color-bg: #0b0b0d;
+  --color-panel: #131316;
+  --color-panel-border: #232327;
+  --color-card: #17171b;
+  --color-card-border: #26262b;
+  --color-text: #ededf0;
+  --color-text-muted: #9a9aa3;
+  --color-text-faint: #6c6c74;
+
+  --color-accent: #6d8bff;
+  --color-positive: #34c759;
+  --color-negative: #ff5c5c;
+  --color-warning: #f5a623;
+
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+
+  --radius-card: 20px;
+  --radius-card-sm: 14px;
+  --radius-pill: 50px;
+
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --shadow-card: 0 5px 24px rgba(0, 0, 0, 0.35);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-bg: var(--color-bg);
+  --color-panel: var(--color-panel);
+  --color-panel-border: var(--color-panel-border);
+  --color-card: var(--color-card);
+  --color-card-border: var(--color-card-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-faint: var(--color-text-faint);
+  --color-accent: var(--color-accent);
+  --color-positive: var(--color-positive);
+  --color-negative: var(--color-negative);
+  --color-warning: var(--color-warning);
+  --font-sans: var(--font-sora);
+  --font-body: var(--font-inter);
+  --radius-card: var(--radius-card);
+  --radius-card-sm: var(--radius-card-sm);
+  --radius-pill: var(--radius-pill);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  color-scheme: dark;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sora), var(--font-inter), sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Thin, unobtrusive scrollbar to match the dark chrome */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-card-border) transparent;
+}
