@@ -3,6 +3,7 @@ import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { CartProvider } from "@/components/CartProvider";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -26,9 +27,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sora.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream text-ink">
-        <CartProvider>
-          <SmoothScrollProvider>{children}</SmoothScrollProvider>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <SmoothScrollProvider>{children}</SmoothScrollProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

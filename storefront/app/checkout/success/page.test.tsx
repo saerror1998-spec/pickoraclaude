@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CartProvider } from "@/components/CartProvider";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const finalizeOrderMock = vi.fn();
 vi.mock("@/lib/orders", () => ({
@@ -21,7 +22,7 @@ describe("CheckoutSuccessPage", () => {
       searchParams: Promise.resolve({ order: "pickora-1" }),
       params: Promise.resolve({}),
     });
-    render(<CartProvider>{element}</CartProvider>);
+    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
 
     expect(finalizeOrderMock).toHaveBeenCalledWith("pickora-1");
     expect(await screen.findByText("Payment successful")).toBeInTheDocument();
@@ -35,7 +36,7 @@ describe("CheckoutSuccessPage", () => {
       searchParams: Promise.resolve({}),
       params: Promise.resolve({}),
     });
-    render(<CartProvider>{element}</CartProvider>);
+    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
 
     expect(finalizeOrderMock).not.toHaveBeenCalled();
     expect(await screen.findByText("Payment successful")).toBeInTheDocument();
@@ -49,7 +50,7 @@ describe("CheckoutSuccessPage", () => {
       searchParams: Promise.resolve({ order: "pickora-2" }),
       params: Promise.resolve({}),
     });
-    render(<CartProvider>{element}</CartProvider>);
+    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
 
     expect(await screen.findByText("Checkout cancelled")).toBeInTheDocument();
   });
@@ -62,7 +63,7 @@ describe("CheckoutSuccessPage", () => {
       searchParams: Promise.resolve({ order: "pickora-3" }),
       params: Promise.resolve({}),
     });
-    render(<CartProvider>{element}</CartProvider>);
+    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
 
     expect(await screen.findByText("Payment not yet completed")).toBeInTheDocument();
     expect(screen.queryByText("Payment failed")).not.toBeInTheDocument();

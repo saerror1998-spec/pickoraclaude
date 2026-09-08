@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CartLink } from "./CartLink";
+import { AccountMenu } from "./AccountMenu";
 
 const NAV_LINKS = [
   { href: "/#catalog", label: "Shop" },
@@ -42,13 +43,7 @@ export function Header() {
 
           <CartLink />
 
-          <Link
-            href="/account"
-            aria-label="Account"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-xs font-medium text-white"
-          >
-            P
-          </Link>
+          <AccountMenu />
         </div>
       </div>
     </header>

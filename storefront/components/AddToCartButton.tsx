@@ -1,23 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
+import { useAuth } from "./AuthProvider";
 import type { CartItem } from "@/lib/cart-types";
 
 export function AddToCartButton({ product }: { product: Omit<CartItem, "quantity"> }) {
   const { addItem } = useCart();
+  const { user, loading, signInWithGoogle } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+
+  async function requireSignIn() {
+    setSigningIn(true);
+    try {
+      await signInWithGoogle(pathname);
+      // On success this navigates away to Google; signingIn only needs
+      // resetting if starting the OAuth flow itself failed.
+    } catch {
+      setSigningIn(false);
+    }
+  }
 
   function handleAddToCart() {
+    if (!user) return requireSignIn();
     addItem(product, quantity);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 2000);
   }
 
   function handleBuyNow() {
+    if (!user) return requireSignIn();
     addItem(product, quantity);
     router.push("/cart");
   }
@@ -42,18 +59,27 @@ export function AddToCartButton({ product }: { product: Omit<CartItem, "quantity
       <button
         type="button"
         onClick={handleAddToCart}
-        className="w-full rounded-[var(--radius-pill)] border border-ink px-8 py-3 text-sm font-medium text-ink transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02]"
+        disabled={loading || signingIn}
+        className="w-full rounded-[var(--radius-pill)] border border-ink px-8 py-3 text-sm font-medium text-ink transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {justAdded ? "Added to cart ✓" : "Add to Cart"}
+        {justAdded ? "Added to cart ✓" : !user && !loading ? "Sign in to add to cart" : "Add to Cart"}
       </button>
 
       <button
         type="button"
         onClick={handleBuyNow}
-        className="w-full rounded-[var(--radius-pill)] bg-ink px-8 py-3 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02]"
+        disabled={loading || signingIn}
+        className="w-full rounded-[var(--radius-pill)] bg-ink px-8 py-3 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Buy Now
+        {!user && !loading ? "Sign in to buy now" : "Buy Now"}
       </button>
+
+      {!user && !loading && (
+        <p className="text-center text-xs text-taupe-light">
+          We ask you to sign in with Google before adding to cart, so your order and checkout stay
+          tied to your account.
+        </p>
+      )}
     </div>
   );
 }

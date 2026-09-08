@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
+import { useAuth } from "./AuthProvider";
 
-const DOCK_ITEMS = [
+const NAV_ITEMS = [
   { href: "/", label: "Home", icon: "home" },
   { href: "/#catalog", label: "Shop", icon: "shop" },
   { href: "/cart", label: "Cart", icon: "cart" },
-  { href: "/account", label: "Account", icon: "account" },
 ] as const;
 
-function DockIcon({ name }: { name: (typeof DOCK_ITEMS)[number]["icon"] }) {
+function DockIcon({ name }: { name: (typeof NAV_ITEMS)[number]["icon"] | "account" }) {
   switch (name) {
     case "home":
       return (
@@ -47,6 +48,19 @@ function DockIcon({ name }: { name: (typeof DOCK_ITEMS)[number]["icon"] }) {
 /** Floating bottom navigation shown only below the desktop breakpoint. */
 export function MobileDock() {
   const { itemCount } = useCart();
+  const { user, signInWithGoogle, signOut } = useAuth();
+  const pathname = usePathname();
+
+  async function handleAccountTap() {
+    if (user) await signOut();
+    else {
+      try {
+        await signInWithGoogle(pathname);
+      } catch {
+        // signInWithGoogle already logs; nothing else to do here.
+      }
+    }
+  }
 
   return (
     <>
@@ -60,7 +74,7 @@ export function MobileDock() {
         aria-label="Primary"
         className="fixed inset-x-0 bottom-4 z-40 mx-auto flex w-fit gap-1 rounded-[var(--radius-pill)] bg-ink/95 px-2 py-2 shadow-[var(--shadow-deep)] backdrop-blur-md lg:hidden"
       >
-        {DOCK_ITEMS.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <Link
             key={item.label}
             href={item.href}
@@ -75,6 +89,14 @@ export function MobileDock() {
             )}
           </Link>
         ))}
+        <button
+          type="button"
+          onClick={handleAccountTap}
+          aria-label={user ? "Sign out" : "Sign in"}
+          className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
+        >
+          <DockIcon name="account" />
+        </button>
       </nav>
     </>
   );

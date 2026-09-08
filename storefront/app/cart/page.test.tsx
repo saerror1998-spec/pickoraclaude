@@ -2,6 +2,7 @@ import { describe, expect, it, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CartProvider } from "@/components/CartProvider";
+import { AuthProvider } from "@/components/AuthProvider";
 import CartPage from "./page";
 
 function seedCart(items: unknown[]) {
@@ -24,9 +25,9 @@ describe("CartPage", () => {
 
   it("shows an empty state with no items", async () => {
     render(
-      <CartProvider>
+      <AuthProvider><CartProvider>
         <CartPage />
-      </CartProvider>
+      </CartProvider></AuthProvider>
     );
 
     expect(await screen.findByText("Your cart is empty.")).toBeInTheDocument();
@@ -35,9 +36,9 @@ describe("CartPage", () => {
   it("lists items from the cart and computes the subtotal", async () => {
     seedCart([cartItem]);
     render(
-      <CartProvider>
+      <AuthProvider><CartProvider>
         <CartPage />
-      </CartProvider>
+      </CartProvider></AuthProvider>
     );
 
     expect(await screen.findByText("ThinkPad X1 Carbon")).toBeInTheDocument();
@@ -49,9 +50,9 @@ describe("CartPage", () => {
     seedCart([cartItem]);
     const user = userEvent.setup();
     render(
-      <CartProvider>
+      <AuthProvider><CartProvider>
         <CartPage />
-      </CartProvider>
+      </CartProvider></AuthProvider>
     );
 
     await screen.findByText("ThinkPad X1 Carbon");
@@ -64,9 +65,9 @@ describe("CartPage", () => {
     seedCart([cartItem]);
     const user = userEvent.setup();
     render(
-      <CartProvider>
+      <AuthProvider><CartProvider>
         <CartPage />
-      </CartProvider>
+      </CartProvider></AuthProvider>
     );
 
     await screen.findByText("ThinkPad X1 Carbon");

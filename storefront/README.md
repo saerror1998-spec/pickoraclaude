@@ -30,6 +30,28 @@ Run [`admin/supabase/schema.sql`](../admin/supabase/schema.sql) in the Supabase 
 create the `orders` table (owned by the admin app's schema since it's also read by the admin
 dashboard).
 
+### Customer sign-in (Google, via Supabase Auth)
+
+Adding to cart or buying requires signing in with Google (`components/AddToCartButton.tsx`) —
+enforced client-side, not by hiding the cart page itself. This needs two things configured beyond
+the env vars above, both easy to get wrong silently (the failure mode is a Google/Supabase error
+page, not a helpful in-app message):
+
+1. **Google Cloud Console** → APIs & Services → Credentials → your OAuth 2.0 Client ID →
+   Authorized redirect URIs must include the Supabase callback shown in Supabase's
+   Authentication → Providers → Google settings (`https://<project-ref>.supabase.co/auth/v1/callback`).
+   Missing this gives `Error 400: redirect_uri_mismatch` on Google's side.
+2. **Supabase** → Authentication → URL Configuration → Redirect URLs must include this app's own
+   `/auth/callback` route for every environment you run it in (e.g. `http://localhost:3000/auth/callback`
+   and `https://store.pickoraonline.com/auth/callback`) — this is separate from #1 and separate
+   from any redirect URLs you've added for the admin app's domain.
+
+The flow: `AuthProvider` (`components/AuthProvider.tsx`) calls `signInWithOAuth`, which sends the
+customer to Google, then to Supabase's callback, then back to this app's
+[`app/auth/callback/route.ts`](app/auth/callback/route.ts), which exchanges the code for a session
+and redirects to wherever the customer was trying to go (e.g. back to the product page they were
+adding to cart from).
+
 ### Nomod's real API (verified against the live API — their public docs are thin)
 
 `createNomodCheckoutSession` in [`lib/nomod.ts`](lib/nomod.ts) matches what
@@ -76,8 +98,10 @@ Covers: product filtering/sorting/price formatting, `createNomodCheckoutSession`
 shape (endpoint, `X-API-KEY` header, decimal-string amounts — the things most likely to silently
 regress), the `/api/checkout` route (validation, Nomod error propagation), the checkout button's
 success/error/loading states, product card rendering (pricing, save badge, sold-out state), filter
-sidebar interactions, and the scroll/mount reveal animation (including its `prefers-reduced-motion`
-fallback).
+sidebar interactions, the scroll/mount reveal animation (including its `prefers-reduced-motion`
+fallback), and Google sign-in (`AuthProvider`'s session/loading state, `AccountMenu`'s signed-in/out
+UI, the `/auth/callback` code-exchange route, and that cart actions correctly redirect to sign-in
+rather than adding to cart when signed out).
 
 ## Bulk product import
 
