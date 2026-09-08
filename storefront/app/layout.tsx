@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "Pickora — Premium Refurbished Laptops",
   description:
     "Ask more of your laptop. Premium refurbished laptops, professionally inspected and warrantied.",
+  icons: {
+    icon: "/pickoralogi.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
