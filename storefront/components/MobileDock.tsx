@@ -49,25 +49,33 @@ export function MobileDock() {
   const { itemCount } = useCart();
 
   return (
-    <nav
-      aria-label="Primary"
-      className="fixed inset-x-0 bottom-4 z-40 mx-auto flex w-fit gap-1 rounded-[var(--radius-pill)] bg-ink/95 px-2 py-2 shadow-[var(--shadow-deep)] backdrop-blur-md lg:hidden"
-    >
-      {DOCK_ITEMS.map((item) => (
-        <Link
-          key={item.label}
-          href={item.href}
-          aria-label={item.label === "Cart" ? `Cart, ${itemCount} item${itemCount === 1 ? "" : "s"}` : item.label}
-          className="relative flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
-        >
-          <DockIcon name={item.icon} />
-          {item.icon === "cart" && itemCount > 0 && (
-            <span className="absolute right-1.5 top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white px-0.5 text-[9px] font-medium text-ink tabular-nums">
-              {itemCount}
-            </span>
-          )}
-        </Link>
-      ))}
-    </nav>
+    <>
+      {/* Reserves space in normal document flow so the fixed dock below
+          never overlaps the last bit of page content — every page that
+          renders <MobileDock /> gets this automatically, instead of each
+          page needing its own bottom-padding workaround. */}
+      <div aria-hidden className="h-24 lg:hidden" />
+
+      <nav
+        aria-label="Primary"
+        className="fixed inset-x-0 bottom-4 z-40 mx-auto flex w-fit gap-1 rounded-[var(--radius-pill)] bg-ink/95 px-2 py-2 shadow-[var(--shadow-deep)] backdrop-blur-md lg:hidden"
+      >
+        {DOCK_ITEMS.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            aria-label={item.label === "Cart" ? `Cart, ${itemCount} item${itemCount === 1 ? "" : "s"}` : item.label}
+            className="relative flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
+          >
+            <DockIcon name={item.icon} />
+            {item.icon === "cart" && itemCount > 0 && (
+              <span className="absolute right-1.5 top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-white px-0.5 text-[9px] font-medium text-ink tabular-nums">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+        ))}
+      </nav>
+    </>
   );
 }
