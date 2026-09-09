@@ -129,3 +129,13 @@ export type IntegrationStatus = {
   status: IntegrationStatusValue;
   detail: string;
 };
+
+export type ActivityEventType = "order_placed" | "order_status_changed" | "product_listed";
+
+export type ActivityEvent = {
+  id: string;
+  type: ActivityEventType;
+  message: string;
+  detail: string | null;
+  timestamp: string;
+};

@@ -2,6 +2,7 @@ import { getSupabaseAdminClient } from "./supabase/admin-server";
 import { getSupabaseClient } from "./supabase/client";
 import { SAMPLE_DASHBOARD } from "./sample-data";
 import type {
+  ActivityEvent,
   AdminCustomer,
   AdminOrder,
   AdminProduct,
@@ -375,4 +376,70 @@ export async function fetchIntegrationsStatus(): Promise<IntegrationStatus[]> {
       detail: "Managed in Hostinger's hPanel — check there for build and deploy status.",
     },
   ];
+}
+
+/**
+ * Loads real store events for the Activity and Logs sections — order
+ * placement, order status changes, and new product listings, all derived
+ * from `orders` and `products` rather than a dedicated audit-log table
+ * (Pickora doesn't have one). Deliberately does NOT use Supabase Auth's
+ * admin user list for this — storefront customers and admin staff share
+ * one Supabase project, so that list is mostly Google sign-ins from
+ * shoppers, not admin activity, and surfacing it here would both mislabel
+ * it and expose customer emails outside the customers section.
+ */
+export async function fetchActivityFeed(): Promise<ActivityEvent[]> {
+  const orders = await fetchAdminOrders();
+  const orderEvents: ActivityEvent[] = [];
+  for (const order of orders) {
+    const ref = order.referenceId ?? order.id.slice(0, 8);
+    orderEvents.push({
+      id: `${order.id}-placed`,
+      type: "order_placed",
+      message: `Order ${ref} placed`,
+      detail: order.customerEmail,
+      timestamp: order.createdAt,
+    });
+    if (order.updatedAt !== order.createdAt) {
+      orderEvents.push({
+        id: `${order.id}-status`,
+        type: "order_status_changed",
+        message: `Order ${ref} status changed to "${order.status}"`,
+        detail: order.customerEmail,
+        timestamp: order.updatedAt,
+      });
+    }
+  }
+
+  const productEvents = await fetchRecentlyListedProductEvents();
+
+  return [...orderEvents, ...productEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)).slice(0, 100);
+}
+
+async function fetchRecentlyListedProductEvents(): Promise<ActivityEvent[]> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, name, brand, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+    if (!data) return [];
+
+    return data.map(
+      (row): ActivityEvent => ({
+        id: `product-${row.id}`,
+        type: "product_listed",
+        message: `${row.brand} ${row.name} listed`,
+        detail: null,
+        timestamp: row.created_at,
+      })
+    );
+  } catch (cause) {
+    throw new AdminDataError("Failed to load recently listed products", cause);
+  }
 }

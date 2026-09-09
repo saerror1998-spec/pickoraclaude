@@ -413,3 +413,104 @@ describe("fetchIntegrationsStatus", () => {
     expect(byId["supabase-storage"]).toBe("connected");
   });
 });
+
+describe("fetchActivityFeed", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getSupabaseAdminClientMock.mockReset();
+    getSupabaseClientMock.mockReset();
+  });
+
+  it("returns an empty feed when nothing is configured", async () => {
+    getSupabaseAdminClientMock.mockReturnValue(null);
+    getSupabaseClientMock.mockReturnValue(null);
+    const { fetchActivityFeed } = await import("./admin-data");
+
+    expect(await fetchActivityFeed()).toEqual([]);
+  });
+
+  it("emits an order_placed event, and a separate order_status_changed event only when updated_at differs from created_at", async () => {
+    getSupabaseAdminClientMock.mockReturnValue({
+      from: () => ({
+        select: () => ({
+          order: () => Promise.resolve({ data: [ORDER_ROW_A], error: null }),
+        }),
+      }),
+    });
+    getSupabaseClientMock.mockReturnValue({
+      from: () => ({
+        select: () => ({
+          order: () => ({
+            limit: () => Promise.resolve({ data: [], error: null }),
+          }),
+        }),
+      }),
+    });
+    const { fetchActivityFeed } = await import("./admin-data");
+
+    const events = await fetchActivityFeed();
+    expect(events).toEqual([
+      {
+        id: "o1-status",
+        type: "order_status_changed",
+        message: 'Order pickora-1 status changed to "paid"',
+        detail: "buyer@example.com",
+        timestamp: "2026-09-01T10:05:00.000Z",
+      },
+      {
+        id: "o1-placed",
+        type: "order_placed",
+        message: "Order pickora-1 placed",
+        detail: "buyer@example.com",
+        timestamp: "2026-09-01T10:00:00.000Z",
+      },
+    ]);
+  });
+
+  it("includes recently listed products as product_listed events, newest first overall", async () => {
+    getSupabaseAdminClientMock.mockReturnValue(null);
+    getSupabaseClientMock.mockReturnValue({
+      from: () => ({
+        select: () => ({
+          order: () => ({
+            limit: () =>
+              Promise.resolve({
+                data: [
+                  { id: "p1", name: "ThinkPad X1", brand: "Lenovo", created_at: "2026-09-05T00:00:00.000Z" },
+                ],
+                error: null,
+              }),
+          }),
+        }),
+      }),
+    });
+    const { fetchActivityFeed } = await import("./admin-data");
+
+    const events = await fetchActivityFeed();
+    expect(events).toEqual([
+      {
+        id: "product-p1",
+        type: "product_listed",
+        message: "Lenovo ThinkPad X1 listed",
+        detail: null,
+        timestamp: "2026-09-05T00:00:00.000Z",
+      },
+    ]);
+  });
+
+  it("throws AdminDataError when the product query errors", async () => {
+    getSupabaseAdminClientMock.mockReturnValue(null);
+    getSupabaseClientMock.mockReturnValue({
+      from: () => ({
+        select: () => ({
+          order: () => ({
+            limit: () => Promise.resolve({ data: null, error: { message: "boom" } }),
+          }),
+        }),
+      }),
+    });
+    const { fetchActivityFeed, AdminDataError } = await import("./admin-data");
+
+    await expect(fetchActivityFeed()).rejects.toBeInstanceOf(AdminDataError);
+  });
+});
