@@ -25,12 +25,15 @@ export function Header() {
           />
         </Link>
 
-        <nav aria-label="Primary" className="hidden md:flex items-center gap-6">
+        <nav
+          aria-label="Primary"
+          className="hidden md:flex items-center gap-6 [&:has(>a:hover)>a:not(:hover)]:opacity-40 [&:has(>a:focus-visible)>a:not(:focus-visible)]:opacity-40"
+        >
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
               href={link.href}
-              className="text-sm text-taupe transition-colors duration-200 ease-[var(--ease-expo-out)] hover:text-ink"
+              className="text-sm text-taupe transition-[color,opacity] duration-200 ease-[var(--ease-expo-out)] hover:text-ink"
             >
               {link.label}
             </Link>

@@ -1,20 +1,24 @@
 import Link from "next/link";
-import { ScrollReveal } from "./ScrollReveal";
+import { HeroShaderBackground } from "./HeroShaderBackground";
+import { WaveReveal } from "./WaveReveal";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-ink text-white">
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center px-[var(--gutter-mobile)] py-24 text-center md:px-[var(--gutter-desktop)] md:py-32">
+      <HeroShaderBackground className="absolute inset-0 h-full w-full" />
+      {/* Contrast safety net: the shader's colors shift continuously, so this
+          keeps white text readable no matter where the gradient lands. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-ink/35" />
+
+      <div className="relative mx-auto flex max-w-[1400px] flex-col items-center px-[var(--gutter-mobile)] py-24 text-center md:px-[var(--gutter-desktop)] md:py-32">
         <p className="mb-4 text-sm uppercase tracking-[0.2em] text-white/60">
           Certified refurbished
         </p>
 
-        <ScrollReveal
-          as="h1"
-          lines={["Ask more of", "your laptop."]}
-          className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] text-white"
-          immediate
-        />
+        <h1 className="text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] text-white">
+          <WaveReveal as="span" className="block" text="Ask more of" />
+          <WaveReveal as="span" className="block" text="your laptop." delay={250} />
+        </h1>
 
         <p className="mt-6 max-w-xl text-balance text-[clamp(1rem,1.5vw,1.25rem)] text-white/70">
           Premium laptops, professionally inspected, restored, and warrantied —

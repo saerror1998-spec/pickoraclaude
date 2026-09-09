@@ -74,6 +74,36 @@ h1, h2, h3, h4 {
   will-change: transform;
 }
 
+/* Letter/word reveal used by WaveReveal.tsx. */
+@keyframes wave-reveal-up {
+  0% { opacity: 0; transform: translateY(80%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes wave-reveal-down {
+  0% { opacity: 0; transform: translateY(-80%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes wave-reveal-blur {
+  0% { filter: blur(0.3rem); }
+  100% { filter: blur(0); }
+}
+
+/* Split-shutter page transition used by PageTransition.tsx. */
+@keyframes page-transition-shutter-top {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -100%, 0); }
+}
+@keyframes page-transition-shutter-bottom {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 100%, 0); }
+}
+[data-page-transition-overlay][data-phase="reveal"] [data-page-transition-shutter="top"] {
+  animation: page-transition-shutter-top 550ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+[data-page-transition-overlay][data-phase="reveal"] [data-page-transition-shutter="bottom"] {
+  animation: page-transition-shutter-bottom 550ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

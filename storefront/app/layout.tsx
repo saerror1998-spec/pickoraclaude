@@ -4,6 +4,7 @@ import "./globals.css";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { CartProvider } from "@/components/CartProvider";
 import { AuthProvider } from "@/components/AuthProvider";
+import { PageTransition } from "@/components/PageTransition";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sora.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream text-ink">
+        <PageTransition />
         <AuthProvider>
           <CartProvider>
             <SmoothScrollProvider>{children}</SmoothScrollProvider>
