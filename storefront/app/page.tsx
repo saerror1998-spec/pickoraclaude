@@ -4,6 +4,7 @@ import { BestOffers } from "@/components/BestOffers";
 import { ShopByBrand } from "@/components/ShopByBrand";
 import { BestLaptops } from "@/components/BestLaptops";
 import { WhyPickora } from "@/components/WhyPickora";
+import { Testimonials } from "@/components/Testimonials";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
 import { fetchProducts, ProductFetchError, getSavePercent } from "@/lib/products";
@@ -32,6 +33,7 @@ export default async function HomePage() {
             <Hero />
             <ProductLoadError />
             <WhyPickora />
+            <Testimonials />
           </main>
           <MobileDock />
         </>
@@ -49,6 +51,7 @@ export default async function HomePage() {
         <ShopByBrand products={products} />
         <BestLaptops products={products} />
         <WhyPickora />
+        <Testimonials />
       </main>
       <MobileDock />
     </>
