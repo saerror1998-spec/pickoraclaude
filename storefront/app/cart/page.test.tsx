@@ -46,6 +46,19 @@ describe("CartPage", () => {
     expect(screen.getByTestId("cart-subtotal")).toHaveTextContent("$1,798");
   });
 
+  it("shows the accepted payment methods next to checkout", async () => {
+    seedCart([cartItem]);
+    render(
+      <AuthProvider><CartProvider>
+        <CartPage />
+      </CartProvider></AuthProvider>
+    );
+
+    await screen.findByText("ThinkPad X1 Carbon");
+    expect(screen.getByText("tabby")).toBeInTheDocument();
+    expect(screen.getByText("tamara")).toBeInTheDocument();
+  });
+
   it("removes an item when its remove button is clicked", async () => {
     seedCart([cartItem]);
     const user = userEvent.setup();

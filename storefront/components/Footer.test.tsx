@@ -55,6 +55,13 @@ describe("Footer", () => {
     expect(screen.getAllByRole("link", { name: /Email hello@pickoraonline\.com/ }).length).toBeGreaterThan(0);
   });
 
+  it("shows the accepted payment methods", () => {
+    render(<Footer />);
+    expect(screen.getAllByText("tabby").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("tamara").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Apple Pay").length).toBeGreaterThan(0);
+  });
+
   it("links to the real Instagram and TikTok profiles, opening in a new tab", () => {
     render(<Footer />);
 

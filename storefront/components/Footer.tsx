@@ -5,6 +5,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MagneticButton } from "./MagneticButton";
+import { PaymentBadges } from "./PaymentBadges";
 import { prefersReducedMotion } from "@/lib/motion";
 
 const YEAR = new Date().getFullYear();
@@ -306,6 +307,10 @@ function SimpleFooter() {
 
         <div className="mt-6 flex items-center gap-3">
           <SocialLinks className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/60 transition-colors hover:text-white" />
+        </div>
+
+        <div className="mt-6">
+          <PaymentBadges badgeClassName="border-white/10 bg-white/[0.03] text-white/60" />
         </div>
 
         <p className="mt-8 text-xs text-white/40">© {YEAR} Pickora. All rights reserved.</p>

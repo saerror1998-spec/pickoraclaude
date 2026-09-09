@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 import { CheckoutButton } from "@/components/CheckoutButton";
+import { PaymentBadges } from "@/components/PaymentBadges";
 import { useCart } from "@/components/CartProvider";
 import { formatPrice } from "@/lib/products";
 
@@ -93,6 +94,10 @@ export default function CartPage() {
                       quantity: item.quantity,
                     }))}
                   />
+                </div>
+
+                <div className="mt-4">
+                  <PaymentBadges />
                 </div>
               </div>
             </div>
