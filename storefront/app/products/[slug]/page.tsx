@@ -6,6 +6,7 @@ import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ScrollReveal } from "@/components/ScrollReveal";
+import { ProductInfoAccordion } from "@/components/ProductInfoAccordion";
 import { fetchProductBySlug, formatPrice, ProductFetchError } from "@/lib/products";
 
 const TRUST_BADGES = [
@@ -152,6 +153,8 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </div>
             </div>
           </div>
+
+          <ProductInfoAccordion product={product} />
         </div>
       </main>
       <MobileDock />
