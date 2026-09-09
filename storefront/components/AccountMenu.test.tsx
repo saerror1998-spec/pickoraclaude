@@ -46,15 +46,13 @@ describe("AccountMenu", () => {
     expect(signInWithGoogleMock).toHaveBeenCalledWith("/products/thinkpad-x1");
   });
 
-  it("shows the user's initial when signed in with no avatar, and signs out on click", async () => {
+  it("shows the user's initial when signed in with no avatar, and links to the account page", () => {
     mockUser = { id: "user-1", email: "buyer@example.com" };
-    const user = userEvent.setup();
     render(<AccountMenu />);
 
     expect(screen.getByText("B")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Signed in as buyer@example.com/ }));
-
-    expect(signOutMock).toHaveBeenCalled();
+    const link = screen.getByRole("link", { name: /Signed in as buyer@example.com/ });
+    expect(link).toHaveAttribute("href", "/account");
   });
 });

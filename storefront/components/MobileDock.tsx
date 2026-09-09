@@ -48,17 +48,14 @@ function DockIcon({ name }: { name: (typeof NAV_ITEMS)[number]["icon"] | "accoun
 /** Floating bottom navigation shown only below the desktop breakpoint. */
 export function MobileDock() {
   const { itemCount } = useCart();
-  const { user, signInWithGoogle, signOut } = useAuth();
+  const { user, signInWithGoogle } = useAuth();
   const pathname = usePathname();
 
   async function handleAccountTap() {
-    if (user) await signOut();
-    else {
-      try {
-        await signInWithGoogle(pathname);
-      } catch {
-        // signInWithGoogle already logs; nothing else to do here.
-      }
+    try {
+      await signInWithGoogle(pathname);
+    } catch {
+      // signInWithGoogle already logs; nothing else to do here.
     }
   }
 
@@ -89,14 +86,24 @@ export function MobileDock() {
             )}
           </Link>
         ))}
-        <button
-          type="button"
-          onClick={handleAccountTap}
-          aria-label={user ? "Sign out" : "Sign in"}
-          className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
-        >
-          <DockIcon name="account" />
-        </button>
+        {user ? (
+          <Link
+            href="/account"
+            aria-label="Account"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
+          >
+            <DockIcon name="account" />
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={handleAccountTap}
+            aria-label="Sign in"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
+          >
+            <DockIcon name="account" />
+          </button>
+        )}
       </nav>
     </>
   );

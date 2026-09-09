@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { useAuth } from "./AuthProvider";
 
 export function AccountMenu() {
-  const { user, loading, signInWithGoogle, signOut } = useAuth();
+  const { user, loading, signInWithGoogle } = useAuth();
   const pathname = usePathname();
   const [busy, setBusy] = useState(false);
 
@@ -17,12 +18,6 @@ export function AccountMenu() {
     } catch {
       setBusy(false);
     }
-  }
-
-  async function handleSignOut() {
-    setBusy(true);
-    await signOut();
-    setBusy(false);
   }
 
   if (loading) {
@@ -47,19 +42,17 @@ export function AccountMenu() {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <button
-      type="button"
-      onClick={handleSignOut}
-      disabled={busy}
-      title={`Signed in as ${displayName} — click to sign out`}
-      aria-label={`Signed in as ${displayName}. Sign out`}
-      className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink text-xs font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
+    <Link
+      href="/account"
+      title={`Signed in as ${displayName} — view account`}
+      aria-label={`Signed in as ${displayName}. View account`}
+      className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink text-xs font-medium text-white transition-opacity hover:opacity-80"
     >
       {avatarUrl ? (
         <Image src={avatarUrl} alt="" width={32} height={32} className="h-full w-full object-cover" />
       ) : (
         initial
       )}
-    </button>
+    </Link>
   );
 }

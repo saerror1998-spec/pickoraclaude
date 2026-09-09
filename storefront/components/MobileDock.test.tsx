@@ -62,18 +62,15 @@ describe("MobileDock", () => {
     expect(signOutMock).not.toHaveBeenCalled();
   });
 
-  it("signs out when already signed in and the account button is tapped", async () => {
+  it("links to the account page when already signed in", () => {
     mockUser = { id: "user-1" };
-    const user = userEvent.setup();
     render(
       <CartProvider>
         <MobileDock />
       </CartProvider>
     );
 
-    await user.click(screen.getByRole("button", { name: "Sign out" }));
-
-    expect(signOutMock).toHaveBeenCalled();
-    expect(signInWithGoogleMock).not.toHaveBeenCalled();
+    expect(screen.getByRole("link", { name: "Account" })).toHaveAttribute("href", "/account");
+    expect(signOutMock).not.toHaveBeenCalled();
   });
 });
