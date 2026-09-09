@@ -2,17 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { CartLink } from "./CartLink";
 import { AccountMenu } from "./AccountMenu";
+import { PillNav } from "./PillNav";
+import { AnnouncementBar } from "./AnnouncementBar";
 
 const NAV_LINKS = [
   { href: "/shop", label: "Shop" },
-  { href: "/shop", label: "Laptops" },
   { href: "/#why-pickora", label: "Why Pickora" },
   { href: "/support", label: "Support" },
 ];
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-ink/5 bg-cream/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 bg-cream/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-[var(--gutter-mobile)] py-4 md:px-[var(--gutter-desktop)]">
         <Link href="/" className="shrink-0" aria-label="Pickora home">
           <Image
@@ -25,20 +26,7 @@ export function Header() {
           />
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="hidden md:flex items-center gap-6 [&:has(>a:hover)>a:not(:hover)]:opacity-40 [&:has(>a:focus-visible)>a:not(:focus-visible)]:opacity-40"
-        >
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="text-sm text-taupe transition-[color,opacity] duration-200 ease-[var(--ease-expo-out)] hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <PillNav items={NAV_LINKS} />
 
         <div className="flex items-center gap-4">
           <button
@@ -57,6 +45,8 @@ export function Header() {
           <AccountMenu />
         </div>
       </div>
+
+      <AnnouncementBar />
     </header>
   );
 }

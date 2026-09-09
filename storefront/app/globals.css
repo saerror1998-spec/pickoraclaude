@@ -88,6 +88,12 @@ h1, h2, h3, h4 {
   100% { filter: blur(0); }
 }
 
+/* Fade/slide-in used by AnnouncementBar.tsx when a message rotates. */
+@keyframes fade-slide-in {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 /* Split-shutter page transition used by PageTransition.tsx. */
 @keyframes page-transition-shutter-top {
   from { transform: translate3d(0, 0, 0); }
