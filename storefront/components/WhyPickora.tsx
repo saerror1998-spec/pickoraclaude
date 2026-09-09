@@ -94,7 +94,7 @@ export function WhyPickora() {
       <ScrollReveal
         as="h2"
         lines={["Why buy refurbished", "on Pickora."]}
-        className="text-center text-[clamp(2rem,4vw,3rem)]"
+        className="type-headline-md text-center"
       />
       <p className="mx-auto mt-4 max-w-lg text-balance text-center text-taupe">
         Every laptop is inspected, restored, and backed by a real warranty — so &ldquo;refurbished&rdquo;
@@ -119,7 +119,7 @@ export function WhyPickora() {
       </div>
 
       <div className="mt-20">
-        <h3 className="text-center text-[clamp(1.5rem,2.5vw,2rem)] text-ink">
+        <h3 className="type-label-md text-center text-ink">
           Our certification process
         </h3>
         <p className="mx-auto mt-3 max-w-lg text-balance text-center text-taupe">
