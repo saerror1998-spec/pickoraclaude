@@ -6,7 +6,17 @@ import { BestLaptops } from "@/components/BestLaptops";
 import { WhyPickora } from "@/components/WhyPickora";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
-import { fetchProducts, ProductFetchError } from "@/lib/products";
+import { fetchProducts, ProductFetchError, getSavePercent } from "@/lib/products";
+import type { Product } from "@/lib/types";
+
+/** The single product featured in the Hero — the biggest real discount among in-stock items. */
+function pickHeroProduct(products: Product[]): Product | undefined {
+  const inStock = products.filter((p) => p.inStock);
+  const bestDiscount = [...inStock]
+    .filter((p) => getSavePercent(p) !== null)
+    .sort((a, b) => (getSavePercent(b) ?? 0) - (getSavePercent(a) ?? 0))[0];
+  return bestDiscount ?? inStock[0];
+}
 
 export default async function HomePage() {
   let products;
@@ -34,7 +44,7 @@ export default async function HomePage() {
     <>
       <Header />
       <main className="flex-1">
-        <Hero />
+        <Hero product={pickHeroProduct(products)} />
         <BestOffers products={products} />
         <ShopByBrand products={products} />
         <BestLaptops products={products} />
