@@ -109,13 +109,15 @@ function CinematicFooter() {
   return (
     <div ref={wrapperRef} className="relative h-screen w-full" style={{ clipPath: "inset(0 0 0 0)" }}>
       <footer className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-ink text-white">
-        {/* Ambient glow + grid, purely decorative */}
+        {/* Ambient glow + grid, purely decorative — same ink-to-accent-blue
+            treatment as the Hero's shader, so this reads as the same brand
+            rather than a generic dark-UI gradient. */}
         <div
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[100px]"
           style={{
             background:
-              "radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--color-accent) 20%, transparent) 0%, color-mix(in oklab, var(--color-save) 15%, transparent) 45%, transparent 70%)",
+              "radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--color-accent) 30%, transparent) 0%, color-mix(in oklab, var(--color-accent) 10%, transparent) 50%, transparent 75%)",
           }}
         />
         <div
@@ -133,7 +135,7 @@ function CinematicFooter() {
         <div
           ref={giantTextRef}
           aria-hidden
-          className="pointer-events-none absolute -bottom-[4vh] left-1/2 -translate-x-1/2 select-none whitespace-nowrap text-[18vw] font-black leading-none tracking-tighter text-white/[0.06]"
+          className="pointer-events-none absolute -bottom-[4vh] left-1/2 -translate-x-1/2 select-none whitespace-nowrap text-[18vw] font-black leading-none tracking-tighter text-accent/[0.09]"
         >
           PICKORA
         </div>
@@ -155,7 +157,7 @@ function CinematicFooter() {
               <MagneticButton
                 as={Link}
                 href="/shop"
-                className="rounded-[var(--radius-pill)] border border-white/15 bg-white/5 px-10 py-5 text-base font-medium text-white backdrop-blur-md transition-colors hover:bg-white/10"
+                className="rounded-[var(--radius-pill)] bg-accent px-10 py-5 text-base font-medium text-white transition-colors hover:brightness-110"
               >
                 Shop laptops
               </MagneticButton>
