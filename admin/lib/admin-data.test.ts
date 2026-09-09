@@ -243,3 +243,173 @@ describe("fetchAdminCustomers", () => {
     expect(await fetchAdminCustomers()).toEqual([]);
   });
 });
+
+describe("fetchSalesOverview", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getSupabaseAdminClientMock.mockReset();
+  });
+
+  it("returns all-zero data when there are no orders", async () => {
+    getSupabaseAdminClientMock.mockReturnValue(null);
+    const { fetchSalesOverview } = await import("./admin-data");
+
+    expect(await fetchSalesOverview()).toEqual({
+      totalRevenueCents: 0,
+      paidOrderCount: 0,
+      averageOrderValueCents: 0,
+      revenueTrend: [],
+      topProducts: [],
+      recentSales: [],
+    });
+  });
+
+  it("counts only PAID orders toward revenue, AOV, and top products", async () => {
+    getSupabaseAdminClientMock.mockReturnValue({
+      from: () => ({
+        select: () => ({
+          order: () => Promise.resolve({ data: [ORDER_ROW_B, ORDER_ROW_A], error: null }),
+        }),
+      }),
+    });
+    const { fetchSalesOverview } = await import("./admin-data");
+
+    const sales = await fetchSalesOverview();
+    expect(sales.totalRevenueCents).toBe(96500); // ORDER_ROW_A only; ORDER_ROW_B is "enabled" (unpaid)
+    expect(sales.paidOrderCount).toBe(1);
+    expect(sales.averageOrderValueCents).toBe(96500);
+    expect(sales.revenueTrend).toEqual([{ date: "Sep 1", value: 96500 }]);
+    expect(sales.topProducts).toEqual([
+      { productId: "p1", name: "ThinkPad", unitsSold: 1, revenueCents: 96500 },
+    ]);
+    expect(sales.recentSales.map((o) => o.id)).toEqual(["o1"]);
+  });
+});
+
+describe("fetchStorageOverview", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getSupabaseAdminClientMock.mockReset();
+  });
+
+  it("returns an empty overview when Supabase isn't configured", async () => {
+    getSupabaseAdminClientMock.mockReturnValue(null);
+    const { fetchStorageOverview } = await import("./admin-data");
+
+    expect(await fetchStorageOverview()).toEqual({ buckets: [], totalFileCount: 0, totalSizeBytes: 0 });
+  });
+
+  it("sums file count and size per bucket, skipping folder placeholder entries", async () => {
+    getSupabaseAdminClientMock.mockReturnValue({
+      storage: {
+        listBuckets: () =>
+          Promise.resolve({ data: [{ name: "product-images", public: true }], error: null }),
+        from: () => ({
+          list: () =>
+            Promise.resolve({
+              data: [
+                { id: "f1", metadata: { size: 1000 } },
+                { id: "f2", metadata: { size: 2000 } },
+                { id: null, metadata: null }, // folder placeholder — not a real file
+              ],
+              error: null,
+            }),
+        }),
+      },
+    });
+    const { fetchStorageOverview } = await import("./admin-data");
+
+    expect(await fetchStorageOverview()).toEqual({
+      buckets: [{ name: "product-images", public: true, fileCount: 2, totalSizeBytes: 3000 }],
+      totalFileCount: 2,
+      totalSizeBytes: 3000,
+    });
+  });
+
+  it("throws AdminDataError when the storage API errors", async () => {
+    getSupabaseAdminClientMock.mockReturnValue({
+      storage: {
+        listBuckets: () => Promise.resolve({ data: null, error: { message: "boom" } }),
+      },
+    });
+    const { fetchStorageOverview, AdminDataError } = await import("./admin-data");
+
+    await expect(fetchStorageOverview()).rejects.toBeInstanceOf(AdminDataError);
+  });
+});
+
+describe("fetchCatalogComposition", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getSupabaseClientMock.mockReset();
+  });
+
+  it("groups real products by condition and brand, and computes average price", async () => {
+    getSupabaseClientMock.mockReturnValue({
+      from: () => ({
+        select: () => ({
+          order: () =>
+            Promise.resolve({
+              data: [
+                { id: "1", name: "A", brand: "Dell", price_cents: 80000, in_stock: true, condition: "Excellent" },
+                { id: "2", name: "B", brand: "Dell", price_cents: 100000, in_stock: false, condition: "Good" },
+              ],
+              error: null,
+            }),
+        }),
+      }),
+    });
+    const { fetchCatalogComposition } = await import("./admin-data");
+
+    expect(await fetchCatalogComposition()).toEqual({
+      totalProducts: 2,
+      inStockCount: 1,
+      soldOutCount: 1,
+      byCondition: [
+        { condition: "Excellent", count: 1 },
+        { condition: "Good", count: 1 },
+      ],
+      byBrand: [{ brand: "Dell", count: 2 }],
+      averagePriceCents: 90000,
+    });
+  });
+});
+
+describe("fetchIntegrationsStatus", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    getSupabaseAdminClientMock.mockReset();
+  });
+
+  it("reports Supabase pieces as not_configured and everything else as external when Supabase isn't set up", async () => {
+    getSupabaseAdminClientMock.mockReturnValue(null);
+    const { fetchIntegrationsStatus } = await import("./admin-data");
+
+    const integrations = await fetchIntegrationsStatus();
+    const byId = Object.fromEntries(integrations.map((i) => [i.id, i.status]));
+    expect(byId).toEqual({
+      "supabase-database": "not_configured",
+      "supabase-storage": "not_configured",
+      "google-auth": "external",
+      nomod: "external",
+      hostinger: "external",
+    });
+  });
+
+  it("reports Supabase pieces as connected when live queries succeed", async () => {
+    getSupabaseAdminClientMock.mockReturnValue({
+      from: () => ({
+        select: () => Promise.resolve({ error: null }),
+      }),
+      storage: {
+        listBuckets: () => Promise.resolve({ data: [{ name: "product-images", public: true }], error: null }),
+      },
+    });
+    const { fetchIntegrationsStatus } = await import("./admin-data");
+
+    const integrations = await fetchIntegrationsStatus();
+    const byId = Object.fromEntries(integrations.map((i) => [i.id, i.status]));
+    expect(byId["supabase-database"]).toBe("connected");
+    expect(byId["supabase-storage"]).toBe("connected");
+  });
+});

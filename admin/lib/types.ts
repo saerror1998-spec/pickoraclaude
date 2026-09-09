@@ -81,3 +81,51 @@ export type AdminCustomer = {
   totalSpentCents: number;
   lastOrderAt: string;
 };
+
+export type TopProduct = {
+  productId: string;
+  name: string;
+  unitsSold: number;
+  revenueCents: number;
+};
+
+export type SalesOverview = {
+  totalRevenueCents: number;
+  paidOrderCount: number;
+  averageOrderValueCents: number;
+  revenueTrend: DailyPoint[];
+  topProducts: TopProduct[];
+  recentSales: AdminOrder[];
+};
+
+export type StorageBucketSummary = {
+  name: string;
+  public: boolean;
+  fileCount: number;
+  totalSizeBytes: number;
+};
+
+export type StorageOverview = {
+  buckets: StorageBucketSummary[];
+  totalFileCount: number;
+  totalSizeBytes: number;
+};
+
+export type CatalogComposition = {
+  totalProducts: number;
+  inStockCount: number;
+  soldOutCount: number;
+  byCondition: { condition: string; count: number }[];
+  byBrand: { brand: string; count: number }[];
+  averagePriceCents: number;
+};
+
+export type IntegrationStatusValue = "connected" | "not_configured" | "external";
+
+export type IntegrationStatus = {
+  id: string;
+  name: string;
+  description: string;
+  status: IntegrationStatusValue;
+  detail: string;
+};
