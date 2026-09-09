@@ -30,11 +30,16 @@ export default async function HomePage() {
     throw error;
   }
 
+  const heroImages = products
+    .filter((p) => p.inStock)
+    .slice(0, 4)
+    .map((p) => p.image);
+
   return (
     <>
       <Header />
       <main className="flex-1">
-        <Hero />
+        <Hero images={heroImages} />
         <BestOffers products={products} />
         <ShopByBrand products={products} />
         <BestLaptops products={products} />

@@ -20,4 +20,19 @@ describe("Hero", () => {
     render(<Hero />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
+
+  it("shows the first trust-point step card by default", () => {
+    render(<Hero />);
+    expect(screen.getByText("90-day warranty.")).toBeInTheDocument();
+    expect(screen.getByText("01 / 04")).toBeInTheDocument();
+  });
+
+  it("renders every given product image", () => {
+    const images = ["/a.jpg", "/b.jpg", "/c.jpg"];
+    render(<Hero images={images} />);
+    const srcs = screen.getAllByRole("presentation", { hidden: true }).map((img) => img.getAttribute("src"));
+    for (const src of images) {
+      expect(srcs.some((s) => s?.includes(encodeURIComponent(src)))).toBe(true);
+    }
+  });
 });

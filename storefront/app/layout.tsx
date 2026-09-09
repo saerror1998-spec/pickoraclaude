@@ -5,6 +5,7 @@ import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { CartProvider } from "@/components/CartProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { PageTransition } from "@/components/PageTransition";
+import { Footer } from "@/components/Footer";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <SmoothScrollProvider>{children}</SmoothScrollProvider>
           </CartProvider>
         </AuthProvider>
+        <Footer />
       </body>
     </html>
   );
