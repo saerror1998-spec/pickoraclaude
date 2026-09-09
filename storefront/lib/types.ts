@@ -25,4 +25,5 @@ export type ProductFilters = {
   compatibility: string[];
   priceMin: number | null;
   priceMax: number | null;
+  brand: string | null;
 };

@@ -122,8 +122,16 @@ export function filterProducts(products: Product[], filters: ProductFilters): Pr
     }
     if (filters.priceMin != null && product.priceCents < filters.priceMin) return false;
     if (filters.priceMax != null && product.priceCents > filters.priceMax) return false;
+    if (filters.brand != null && product.brand !== filters.brand) return false;
     return true;
   });
+}
+
+/** Discount percentage vs. original price, or null when there's no real discount. */
+export function getSavePercent(product: Pick<Product, "priceCents" | "originalPriceCents">): number | null {
+  return product.originalPriceCents && product.originalPriceCents > product.priceCents
+    ? Math.round((1 - product.priceCents / product.originalPriceCents) * 100)
+    : null;
 }
 
 export function sortProducts(products: Product[], sort: SortOption): Product[] {

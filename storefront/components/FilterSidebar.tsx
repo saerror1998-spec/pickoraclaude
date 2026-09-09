@@ -14,10 +14,11 @@ function rangeLabel(min: number | null, max: number | null): string {
 type FilterSidebarProps = {
   filters: ProductFilters;
   onChange: (filters: ProductFilters) => void;
+  brands: string[];
   compact?: boolean;
 };
 
-export function FilterSidebar({ filters, onChange, compact = false }: FilterSidebarProps) {
+export function FilterSidebar({ filters, onChange, brands, compact = false }: FilterSidebarProps) {
   const [open, setOpen] = useState(!compact);
 
   function toggleCompatibility(option: string) {
@@ -34,6 +35,22 @@ export function FilterSidebar({ filters, onChange, compact = false }: FilterSide
 
   const body = (
     <div className="space-y-8">
+      <fieldset>
+        <legend className="mb-3 text-sm font-medium text-ink">Brand</legend>
+        <select
+          value={filters.brand ?? ""}
+          onChange={(e) => onChange({ ...filters, brand: e.target.value || null })}
+          className="w-full rounded-[var(--radius-card-secondary)] border border-taupe-light/40 bg-white px-3 py-2 text-sm text-ink focus-visible:outline-none"
+        >
+          <option value="">All brands</option>
+          {brands.map((brand) => (
+            <option key={brand} value={brand}>
+              {brand}
+            </option>
+          ))}
+        </select>
+      </fieldset>
+
       <fieldset>
         <legend className="mb-3 text-sm font-medium text-ink">Compatibility</legend>
         <div className="space-y-2">

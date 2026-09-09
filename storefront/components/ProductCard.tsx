@@ -1,13 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice } from "@/lib/products";
+import { formatPrice, getSavePercent } from "@/lib/products";
 import type { Product } from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
-  const savePercent =
-    product.originalPriceCents && product.originalPriceCents > product.priceCents
-      ? Math.round((1 - product.priceCents / product.originalPriceCents) * 100)
-      : null;
+  const savePercent = getSavePercent(product);
 
   return (
     <Link

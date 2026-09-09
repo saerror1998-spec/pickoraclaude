@@ -1,43 +1,50 @@
 import { describe, expect, it, afterEach } from "vitest";
-import { filterProducts, sortProducts, formatPrice } from "./products";
+import { filterProducts, sortProducts, formatPrice, getSavePercent } from "./products";
 import { SAMPLE_PRODUCTS } from "./sample-data";
+
+const EMPTY_FILTERS = { compatibility: [], priceMin: null, priceMax: null, brand: null };
 
 describe("filterProducts", () => {
   it("returns all products when filters are empty", () => {
-    const result = filterProducts(SAMPLE_PRODUCTS, {
-      compatibility: [],
-      priceMin: null,
-      priceMax: null,
-    });
+    const result = filterProducts(SAMPLE_PRODUCTS, EMPTY_FILTERS);
     expect(result).toHaveLength(SAMPLE_PRODUCTS.length);
   });
 
   it("filters by compatibility", () => {
-    const result = filterProducts(SAMPLE_PRODUCTS, {
-      compatibility: ["macOS"],
-      priceMin: null,
-      priceMax: null,
-    });
+    const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, compatibility: ["macOS"] });
     expect(result.length).toBeGreaterThan(0);
     expect(result.every((p) => p.compatibility.includes("macOS"))).toBe(true);
   });
 
   it("filters by price range", () => {
-    const result = filterProducts(SAMPLE_PRODUCTS, {
-      compatibility: [],
-      priceMin: 50000,
-      priceMax: 100000,
-    });
+    const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, priceMin: 50000, priceMax: 100000 });
     expect(result.every((p) => p.priceCents >= 50000 && p.priceCents <= 100000)).toBe(true);
   });
 
+  it("filters by brand", () => {
+    const brand = SAMPLE_PRODUCTS[0].brand;
+    const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, brand });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every((p) => p.brand === brand)).toBe(true);
+  });
+
   it("returns an empty array when no product matches", () => {
-    const result = filterProducts(SAMPLE_PRODUCTS, {
-      compatibility: ["macOS"],
-      priceMin: 0,
-      priceMax: 1,
-    });
+    const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, compatibility: ["macOS"], priceMin: 0, priceMax: 1 });
     expect(result).toHaveLength(0);
+  });
+});
+
+describe("getSavePercent", () => {
+  it("returns the rounded discount percentage when the original price is higher", () => {
+    expect(getSavePercent({ priceCents: 8000, originalPriceCents: 10000 })).toBe(20);
+  });
+
+  it("returns null when there's no original price", () => {
+    expect(getSavePercent({ priceCents: 8000, originalPriceCents: null })).toBeNull();
+  });
+
+  it("returns null when the original price isn't actually higher", () => {
+    expect(getSavePercent({ priceCents: 8000, originalPriceCents: 8000 })).toBeNull();
   });
 });
 
