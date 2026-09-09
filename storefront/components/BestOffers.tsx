@@ -20,7 +20,7 @@ export function BestOffers({ products }: { products: Product[] }) {
       className="mx-auto max-w-[1400px] px-[var(--gutter-mobile)] pt-16 md:px-[var(--gutter-desktop)]"
     >
       <div className="flex items-baseline justify-between gap-4">
-        <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] text-ink">Best offers right now</h2>
+        <h2 className="type-label-md text-ink">Best offers right now</h2>
         <span className="shrink-0 text-sm text-taupe">Biggest savings across the catalog</span>
       </div>
 

@@ -15,7 +15,7 @@ export function BestLaptops({ products }: { products: Product[] }) {
       className="mx-auto max-w-[1400px] px-[var(--gutter-mobile)] pt-16 md:px-[var(--gutter-desktop)]"
     >
       <div className="flex items-baseline justify-between gap-4">
-        <h2 className="text-[clamp(1.5rem,2.5vw,2rem)] text-ink">Best laptops</h2>
+        <h2 className="type-label-md text-ink">Best laptops</h2>
         <Link href="/shop" className="shrink-0 text-sm text-accent hover:underline">
           View all laptops →
         </Link>
