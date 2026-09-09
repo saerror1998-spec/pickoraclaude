@@ -3,6 +3,7 @@ import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { CartProvider } from "@/components/CartProvider";
+import { WishlistProvider } from "@/components/WishlistProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { PageTransition } from "@/components/PageTransition";
 import { Footer } from "@/components/Footer";
@@ -35,7 +36,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <PageTransition />
         <AuthProvider>
           <CartProvider>
-            <SmoothScrollProvider>{children}</SmoothScrollProvider>
+            <WishlistProvider>
+              <SmoothScrollProvider>{children}</SmoothScrollProvider>
+            </WishlistProvider>
           </CartProvider>
         </AuthProvider>
         <Footer />

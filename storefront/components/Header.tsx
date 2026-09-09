@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CartLink } from "./CartLink";
+import { WishlistLink } from "./WishlistLink";
 import { AccountMenu } from "./AccountMenu";
 import { PillNav } from "./PillNav";
 import { AnnouncementBar } from "./AnnouncementBar";
@@ -39,6 +40,8 @@ export function Header() {
               <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
+
+          <WishlistLink />
 
           <CartLink />
 

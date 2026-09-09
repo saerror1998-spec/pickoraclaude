@@ -2,6 +2,7 @@ import { describe, expect, it, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CartProvider } from "@/components/CartProvider";
+import { WishlistProvider } from "@/components/WishlistProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import CartPage from "./page";
 
@@ -18,28 +19,32 @@ const cartItem = {
   quantity: 2,
 };
 
+function renderCartPage() {
+  return render(
+    <AuthProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <CartPage />
+        </WishlistProvider>
+      </CartProvider>
+    </AuthProvider>
+  );
+}
+
 describe("CartPage", () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
 
   it("shows an empty state with no items", async () => {
-    render(
-      <AuthProvider><CartProvider>
-        <CartPage />
-      </CartProvider></AuthProvider>
-    );
+    renderCartPage();
 
     expect(await screen.findByText("Your cart is empty.")).toBeInTheDocument();
   });
 
   it("lists items from the cart and computes the subtotal", async () => {
     seedCart([cartItem]);
-    render(
-      <AuthProvider><CartProvider>
-        <CartPage />
-      </CartProvider></AuthProvider>
-    );
+    renderCartPage();
 
     expect(await screen.findByText("ThinkPad X1 Carbon")).toBeInTheDocument();
     // 899.00 * 2 = 1798.00 -> formatted whole-dollar
@@ -48,11 +53,7 @@ describe("CartPage", () => {
 
   it("shows the accepted payment methods next to checkout", async () => {
     seedCart([cartItem]);
-    render(
-      <AuthProvider><CartProvider>
-        <CartPage />
-      </CartProvider></AuthProvider>
-    );
+    renderCartPage();
 
     await screen.findByText("ThinkPad X1 Carbon");
     expect(screen.getByText("tabby")).toBeInTheDocument();
@@ -62,11 +63,7 @@ describe("CartPage", () => {
   it("removes an item when its remove button is clicked", async () => {
     seedCart([cartItem]);
     const user = userEvent.setup();
-    render(
-      <AuthProvider><CartProvider>
-        <CartPage />
-      </CartProvider></AuthProvider>
-    );
+    renderCartPage();
 
     await screen.findByText("ThinkPad X1 Carbon");
     await user.click(screen.getByRole("button", { name: /Remove ThinkPad X1 Carbon/ }));
@@ -77,11 +74,7 @@ describe("CartPage", () => {
   it("updating quantity updates the subtotal", async () => {
     seedCart([cartItem]);
     const user = userEvent.setup();
-    render(
-      <AuthProvider><CartProvider>
-        <CartPage />
-      </CartProvider></AuthProvider>
-    );
+    renderCartPage();
 
     await screen.findByText("ThinkPad X1 Carbon");
     await user.selectOptions(screen.getByLabelText("Quantity for ThinkPad X1 Carbon"), "1");

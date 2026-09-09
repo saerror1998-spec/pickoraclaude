@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CartProvider } from "@/components/CartProvider";
+import { WishlistProvider } from "@/components/WishlistProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 
 const getUserMock = vi.fn();
@@ -32,7 +33,7 @@ describe("AccountPage", () => {
     const { default: AccountPage } = await import("./page");
 
     const element = await AccountPage();
-    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
+    render(<AuthProvider><CartProvider><WishlistProvider>{element}</WishlistProvider></CartProvider></AuthProvider>);
 
     expect(screen.getByText("Sign in to view your account and order history.")).toBeInTheDocument();
     expect(fetchOrdersForEmailMock).not.toHaveBeenCalled();
@@ -45,7 +46,7 @@ describe("AccountPage", () => {
     const { default: AccountPage } = await import("./page");
 
     const element = await AccountPage();
-    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
+    render(<AuthProvider><CartProvider><WishlistProvider>{element}</WishlistProvider></CartProvider></AuthProvider>);
 
     expect(screen.getByText("Buyer Bee")).toBeInTheDocument();
     expect(screen.getByText("buyer@example.com")).toBeInTheDocument();
@@ -71,7 +72,7 @@ describe("AccountPage", () => {
     const { default: AccountPage } = await import("./page");
 
     const element = await AccountPage();
-    render(<AuthProvider><CartProvider>{element}</CartProvider></AuthProvider>);
+    render(<AuthProvider><CartProvider><WishlistProvider>{element}</WishlistProvider></CartProvider></AuthProvider>);
 
     expect(screen.getByText("Order #pickora-1")).toBeInTheDocument();
     expect(screen.getByText("Paid")).toBeInTheDocument();
