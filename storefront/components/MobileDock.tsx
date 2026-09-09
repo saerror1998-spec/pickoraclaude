@@ -7,7 +7,7 @@ import { useAuth } from "./AuthProvider";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: "home" },
-  { href: "/#catalog", label: "Shop", icon: "shop" },
+  { href: "/shop", label: "Shop", icon: "shop" },
   { href: "/cart", label: "Cart", icon: "cart" },
 ] as const;
 

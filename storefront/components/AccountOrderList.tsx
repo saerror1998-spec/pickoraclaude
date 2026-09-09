@@ -26,7 +26,7 @@ export function AccountOrderList({ orders }: { orders: AccountOrder[] }) {
       <div className="rounded-[var(--radius-card)] bg-white p-12 text-center shadow-[var(--shadow-soft)]">
         <p className="text-taupe">You haven&apos;t placed any orders yet.</p>
         <Link
-          href="/#catalog"
+          href="/shop"
           className="mt-4 inline-block rounded-[var(--radius-pill)] bg-ink px-6 py-2.5 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02]"
         >
           Browse laptops

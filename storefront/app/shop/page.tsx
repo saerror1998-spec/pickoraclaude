@@ -1,14 +1,17 @@
 import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { BestOffers } from "@/components/BestOffers";
-import { ShopByBrand } from "@/components/ShopByBrand";
-import { BestLaptops } from "@/components/BestLaptops";
-import { WhyPickora } from "@/components/WhyPickora";
+import { CatalogSection } from "@/components/CatalogSection";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
 import { fetchProducts, ProductFetchError } from "@/lib/products";
 
-export default async function HomePage() {
+export const metadata = {
+  title: "Shop all laptops — Pickora",
+};
+
+export default async function ShopPage({ searchParams }: PageProps<"/shop">) {
+  const { brand } = await searchParams;
+  const initialBrand = typeof brand === "string" ? brand : null;
+
   let products;
   try {
     products = await fetchProducts();
@@ -19,9 +22,7 @@ export default async function HomePage() {
         <>
           <Header />
           <main className="flex-1">
-            <Hero />
             <ProductLoadError />
-            <WhyPickora />
           </main>
           <MobileDock />
         </>
@@ -34,11 +35,7 @@ export default async function HomePage() {
     <>
       <Header />
       <main className="flex-1">
-        <Hero />
-        <BestOffers products={products} />
-        <ShopByBrand products={products} />
-        <BestLaptops products={products} />
-        <WhyPickora />
+        <CatalogSection products={products} initialBrand={initialBrand} />
       </main>
       <MobileDock />
     </>

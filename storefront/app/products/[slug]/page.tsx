@@ -53,7 +53,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               Home
             </Link>
             <span aria-hidden>/</span>
-            <Link href="/#catalog" className="transition-colors hover:text-ink">
+            <Link href="/shop" className="transition-colors hover:text-ink">
               Laptops
             </Link>
             <span aria-hidden>/</span>

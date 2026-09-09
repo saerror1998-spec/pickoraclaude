@@ -26,7 +26,7 @@ export function ShopByBrand({ products }: { products: Product[] }) {
         {brands.map(([brand, count]) => (
           <Link
             key={brand}
-            href={`/?brand=${encodeURIComponent(brand)}#catalog`}
+            href={`/shop?brand=${encodeURIComponent(brand)}`}
             className="rounded-[var(--radius-card-secondary)] bg-white p-6 text-center shadow-[var(--shadow-soft)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-1"
           >
             <span className="block text-base text-ink">{brand}</span>

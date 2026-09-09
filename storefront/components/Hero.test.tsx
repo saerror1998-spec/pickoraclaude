@@ -12,7 +12,7 @@ describe("Hero", () => {
   it("renders the subheading and both CTAs", () => {
     render(<Hero />);
     expect(screen.getByText(/Premium laptops, professionally inspected/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Explore Laptops" })).toHaveAttribute("href", "/#catalog");
+    expect(screen.getByRole("link", { name: "Explore Laptops" })).toHaveAttribute("href", "/shop");
     expect(screen.getByRole("link", { name: "Learn about our warranty" })).toHaveAttribute("href", "/warranty");
   });
 

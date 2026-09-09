@@ -4,8 +4,8 @@ import { CartLink } from "./CartLink";
 import { AccountMenu } from "./AccountMenu";
 
 const NAV_LINKS = [
-  { href: "/#catalog", label: "Shop" },
-  { href: "/#catalog", label: "Laptops" },
+  { href: "/shop", label: "Shop" },
+  { href: "/shop", label: "Laptops" },
   { href: "/#why-pickora", label: "Why Pickora" },
   { href: "/support", label: "Support" },
 ];

@@ -17,13 +17,13 @@ const OUTCOME_BY_STATUS: Record<
     icon: "×",
     title: "Checkout cancelled",
     message: "No charge was made. You can pick up where you left off whenever you're ready.",
-    action: { href: "/#catalog", label: "Back to shop" },
+    action: { href: "/shop", label: "Back to shop" },
   },
   expired: {
     icon: "!",
     title: "Checkout link expired",
     message: "This checkout session timed out before payment completed. No charge was made — please start again.",
-    action: { href: "/#catalog", label: "Back to shop" },
+    action: { href: "/shop", label: "Back to shop" },
   },
   // Nomod's docs claim an unpaid session's status is "created", but the real
   // API returns "enabled" — confirmed by hitting the live API directly.
@@ -32,13 +32,13 @@ const OUTCOME_BY_STATUS: Record<
     icon: "…",
     title: "Payment not yet completed",
     message: "We haven't received confirmation of this payment yet. If you completed payment, please check back shortly.",
-    action: { href: "/#catalog", label: "Back to shop" },
+    action: { href: "/shop", label: "Back to shop" },
   },
   enabled: {
     icon: "…",
     title: "Payment not yet completed",
     message: "We haven't received confirmation of this payment yet. If you completed payment, please check back shortly.",
-    action: { href: "/#catalog", label: "Back to shop" },
+    action: { href: "/shop", label: "Back to shop" },
   },
 };
 
@@ -46,21 +46,21 @@ const FAILED_OUTCOME = {
   icon: "!",
   title: "Payment failed",
   message: "Your payment couldn't be completed. No charge was made — please try again, or use a different payment method.",
-  action: { href: "/#catalog", label: "Back to shop" },
+  action: { href: "/shop", label: "Back to shop" },
 };
 
 const UNKNOWN_ORDER_OUTCOME = {
   icon: "!",
   title: "We couldn't find that order",
   message: "This checkout link looks incomplete or has already been used. If you completed a payment, check your email for confirmation.",
-  action: { href: "/#catalog", label: "Back to shop" },
+  action: { href: "/shop", label: "Back to shop" },
 };
 
 const ERROR_OUTCOME = {
   icon: "!",
   title: "We couldn't confirm your payment status",
   message: "Something went wrong verifying this order. If you completed payment, it will still be processed — check your email, or contact support with your order reference.",
-  action: { href: "/#catalog", label: "Back to shop" },
+  action: { href: "/shop", label: "Back to shop" },
 };
 
 /**

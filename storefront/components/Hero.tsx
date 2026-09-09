@@ -27,7 +27,7 @@ export function Hero() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link
-            href="/#catalog"
+            href="/shop"
             className="rounded-[var(--radius-pill)] bg-white px-8 py-3 text-sm font-medium text-ink transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-105"
           >
             Explore Laptops
