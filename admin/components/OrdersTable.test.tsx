@@ -1,7 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { OrdersTable } from "./OrdersTable";
 import type { AdminOrder } from "@/lib/types";
+
+// lib/actions/orders.ts is a real "use server" module (imports the
+// service-role Supabase client via a server-only guard) — Next's build
+// strips that down to a safe client-side action reference automatically,
+// but Vitest doesn't do that RSC transform, so it needs mocking here.
+vi.mock("@/lib/actions/orders", () => ({
+  updateOrderStatus: async () => ({ error: null }),
+  EDITABLE_ORDER_STATUSES: ["pending", "paid", "cancelled", "expired", "refunded"],
+}));
 
 const order: AdminOrder = {
   id: "o1",

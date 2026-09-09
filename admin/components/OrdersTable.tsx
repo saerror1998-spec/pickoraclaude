@@ -1,5 +1,5 @@
 import { Card } from "./Card";
-import { StatusBadge } from "./StatusBadge";
+import { OrderStatusSelect } from "./OrderStatusSelect";
 import { formatPrice, formatDateTime } from "@/lib/format";
 import type { AdminOrder } from "@/lib/types";
 
@@ -44,7 +44,7 @@ export function OrdersTable({ orders }: { orders: AdminOrder[] }) {
                 {formatPrice(order.totalCents, order.currency)}
               </td>
               <td className="px-5 py-3">
-                <StatusBadge status={order.status} />
+                <OrderStatusSelect orderId={order.id} status={order.status} />
               </td>
               <td className="px-5 py-3 text-right text-text-faint">{formatDateTime(order.createdAt)}</td>
             </tr>
