@@ -5,21 +5,22 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Card } from "./Card";
 import type { DailyPoint } from "@/lib/types";
 
-const RANGE_OPTIONS = ["14D", "1M", "3M", "6M"] as const;
+// Only two options — the data feeding this chart is always a fixed 30-day
+// window (see fetchDashboardOverview), so a "3M"/"6M" button would just
+// show the same 30 days again rather than genuinely more data.
+const RANGE_OPTIONS = ["14D", "1M"] as const;
 type Range = (typeof RANGE_OPTIONS)[number];
 
-const RANGE_DAYS: Record<Range, number> = { "14D": 14, "1M": 30, "3M": 90, "6M": 180 };
+const RANGE_DAYS: Record<Range, number> = { "14D": 14, "1M": 30 };
 
-export function OrdersTrendChart({ data, totalViews }: { data: DailyPoint[]; totalViews: string }) {
+export function OrdersTrendChart({ data }: { data: DailyPoint[] }) {
   const [range, setRange] = useState<Range>("1M");
   const visiblePoints = data.slice(-Math.min(RANGE_DAYS[range], data.length));
 
   return (
     <Card className="col-span-full lg:col-span-2">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-text-muted">
-          Orders from {totalViews} views · Last 30 days
-        </p>
+        <p className="text-sm text-text-muted">Orders placed per day</p>
         <div role="group" aria-label="Chart range" className="flex gap-1 rounded-[var(--radius-pill)] bg-bg p-1">
           {RANGE_OPTIONS.map((option) => (
             <button

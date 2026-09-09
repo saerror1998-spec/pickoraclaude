@@ -17,29 +17,16 @@ export type MonthlyRevenuePoint = {
   revenueCents: number;
 };
 
-export type FunnelStage = {
-  stage: string;
-  count: number;
-  percentOfPrevious: number | null;
-};
-
-export type TrafficSource = {
-  source: string;
-  visits: number;
-  sharePercent: number;
-};
-
 export type DashboardOverview = {
   stats: {
-    orders: StatSummary;
-    averageOrderValueCents: StatSummary;
-    conversionRate: StatSummary;
+    orders30d: StatSummary;
+    revenue30d: StatSummary;
+    averageOrderValue30d: StatSummary;
   };
+  /** Daily order counts (any status) for the last 30 days. */
   ordersTrend: DailyPoint[];
+  /** Paid revenue for the last 6 calendar months, oldest first. */
   revenueByMonth: MonthlyRevenuePoint[];
-  revenueHighlightMonth: string;
-  funnel: FunnelStage[];
-  trafficSources: TrafficSource[];
   totalOrdersLast30Days: number;
 };
 

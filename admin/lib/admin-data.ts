@@ -1,6 +1,7 @@
 import { getSupabaseAdminClient } from "./supabase/admin-server";
 import { getSupabaseClient } from "./supabase/client";
 import { SAMPLE_DASHBOARD } from "./sample-data";
+import { formatPrice } from "./format";
 import type {
   ActivityEvent,
   AdminCustomer,
@@ -12,11 +13,14 @@ import type {
   DashboardOverview,
   IntegrationStatus,
   IntegrationStatusValue,
+  MonthlyRevenuePoint,
   OrderLineItem,
   SalesOverview,
+  StatSummary,
   StorageBucketSummary,
   StorageOverview,
   TopProduct,
+  TrendDirection,
 } from "./types";
 
 export class AdminDataError extends Error {
@@ -26,12 +30,39 @@ export class AdminDataError extends Error {
   }
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Builds a period-over-period stat, avoiding a divide-by-zero when the prior period had no data. */
+function periodStat(
+  label: string,
+  current: number,
+  previous: number,
+  formatValue: (n: number) => string
+): StatSummary {
+  const value = formatValue(current);
+
+  if (previous === 0) {
+    return {
+      label,
+      value,
+      deltaLabel: current === 0 ? "No orders yet" : "No prior-period data",
+      trend: "flat",
+    };
+  }
+
+  const pctChange = ((current - previous) / previous) * 100;
+  const trend: TrendDirection = pctChange > 0.5 ? "up" : pctChange < -0.5 ? "down" : "flat";
+  const sign = pctChange >= 0 ? "+" : "";
+  return { label, value, deltaLabel: `${sign}${pctChange.toFixed(1)}% vs prior 30 days`, trend };
+}
+
 /**
- * Loads the overview dashboard's stats/charts. Pickora doesn't have an
- * `orders`/analytics pipeline yet, so this currently always returns sample
- * data shaped like the real thing (see lib/types.ts) — swapping in a real
- * `orders` table later only requires implementing the query below, not
- * touching any dashboard component.
+ * Loads the overview dashboard's stats/charts from real orders — order
+ * volume, revenue, and average order value, each compared against the
+ * prior 30-day period, plus a 30-day order-count trend and 6-month revenue
+ * chart. There's no web analytics/traffic provider connected (see the
+ * Analytics page), so this deliberately has no conversion-rate or funnel
+ * data — that would have to be fabricated.
  */
 export async function fetchDashboardOverview(): Promise<DashboardOverview> {
   const supabase = getSupabaseAdminClient();
@@ -44,9 +75,69 @@ export async function fetchDashboardOverview(): Promise<DashboardOverview> {
       // showing a broken dashboard on day one.
       return SAMPLE_DASHBOARD;
     }
-    // TODO: once an orders/analytics pipeline exists, replace this with real
-    // aggregation queries. Structure is already in place via SAMPLE_DASHBOARD's shape.
-    return SAMPLE_DASHBOARD;
+
+    const orders = await fetchAdminOrders();
+
+    const now = Date.now();
+    const last30Start = now - 30 * DAY_MS;
+    const prev30Start = now - 60 * DAY_MS;
+
+    const last30 = orders.filter((o) => new Date(o.createdAt).getTime() >= last30Start);
+    const prev30 = orders.filter((o) => {
+      const t = new Date(o.createdAt).getTime();
+      return t >= prev30Start && t < last30Start;
+    });
+
+    const last30Paid = last30.filter((o) => o.status === PAID_STATUS);
+    const prev30Paid = prev30.filter((o) => o.status === PAID_STATUS);
+
+    const last30Revenue = last30Paid.reduce((sum, o) => sum + o.totalCents, 0);
+    const prev30Revenue = prev30Paid.reduce((sum, o) => sum + o.totalCents, 0);
+
+    const last30Aov = last30Paid.length > 0 ? Math.round(last30Revenue / last30Paid.length) : 0;
+    const prev30Aov = prev30Paid.length > 0 ? Math.round(prev30Revenue / prev30Paid.length) : 0;
+
+    const ordersByDay = new Map<string, number>();
+    for (const order of last30) {
+      const day = order.createdAt.slice(0, 10);
+      ordersByDay.set(day, (ordersByDay.get(day) ?? 0) + 1);
+    }
+    const ordersTrend: DailyPoint[] = Array.from({ length: 30 }, (_, i) => {
+      const d = new Date(now - (29 - i) * DAY_MS);
+      const key = d.toISOString().slice(0, 10);
+      return {
+        date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        value: ordersByDay.get(key) ?? 0,
+      };
+    });
+
+    const revenueByMonthMap = new Map<string, number>();
+    for (const order of orders) {
+      if (order.status !== PAID_STATUS) continue;
+      const key = order.createdAt.slice(0, 7); // "YYYY-MM"
+      revenueByMonthMap.set(key, (revenueByMonthMap.get(key) ?? 0) + order.totalCents);
+    }
+    const revenueByMonth: MonthlyRevenuePoint[] = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(now);
+      d.setDate(1);
+      d.setMonth(d.getMonth() - (5 - i));
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      return {
+        month: d.toLocaleDateString("en-US", { month: "short" }),
+        revenueCents: revenueByMonthMap.get(key) ?? 0,
+      };
+    });
+
+    return {
+      stats: {
+        orders30d: periodStat("Orders (30d)", last30.length, prev30.length, (n) => n.toLocaleString("en-US")),
+        revenue30d: periodStat("Revenue (30d)", last30Revenue, prev30Revenue, formatPrice),
+        averageOrderValue30d: periodStat("Average order value", last30Aov, prev30Aov, formatPrice),
+      },
+      ordersTrend,
+      revenueByMonth,
+      totalOrdersLast30Days: last30.length,
+    };
   } catch (cause) {
     throw new AdminDataError("Failed to load dashboard overview", cause);
   }

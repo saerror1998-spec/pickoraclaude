@@ -2,8 +2,7 @@ import { Header } from "@/components/Header";
 import { StatCard } from "@/components/StatCard";
 import { OrdersTrendChart } from "@/components/OrdersTrendChart";
 import { RevenueChart } from "@/components/RevenueChart";
-import { FunnelCard } from "@/components/FunnelCard";
-import { TrafficPieChart } from "@/components/TrafficPieChart";
+import { NotConnectedCard } from "@/components/NotConnectedCard";
 import { DashboardError } from "@/components/DashboardError";
 import { fetchDashboardOverview, AdminDataError } from "@/lib/admin-data";
 
@@ -30,17 +29,17 @@ export default async function OverviewPage() {
     <>
       <Header />
       <main className="grid flex-1 grid-cols-1 gap-3 p-6 lg:grid-cols-3">
-        <StatCard stat={overview.stats.orders} />
-        <StatCard stat={overview.stats.averageOrderValueCents} />
-        <StatCard stat={overview.stats.conversionRate} />
+        <StatCard stat={overview.stats.orders30d} />
+        <StatCard stat={overview.stats.revenue30d} />
+        <StatCard stat={overview.stats.averageOrderValue30d} />
 
-        <OrdersTrendChart data={overview.ordersTrend} totalViews="72K" />
-        <RevenueChart data={overview.revenueByMonth} highlightMonth={overview.revenueHighlightMonth} />
+        <OrdersTrendChart data={overview.ordersTrend} />
+        <RevenueChart data={overview.revenueByMonth} />
 
-        <FunnelCard stages={overview.funnel} />
-        <div className="lg:col-span-2">
-          <TrafficPieChart sources={overview.trafficSources} totalOrders={overview.totalOrdersLast30Days} />
-        </div>
+        <NotConnectedCard
+          title="Traffic and conversion analytics aren't connected yet"
+          description="Pickora doesn't have a web analytics provider (e.g. Google Analytics or Search Console) wired up, so visits, sessions, and funnel conversion can't be shown here honestly. The stats and charts above are real order data in the meantime."
+        />
       </main>
     </>
   );

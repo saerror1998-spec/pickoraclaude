@@ -49,6 +49,49 @@ describe("fetchDashboardOverview", () => {
 
     await expect(fetchDashboardOverview()).rejects.toBeInstanceOf(AdminDataError);
   });
+
+  it("computes real 30-day stats from real orders, comparing against the prior 30-day period", async () => {
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const iso = (daysAgo: number) => new Date(Date.now() - daysAgo * DAY_MS).toISOString();
+
+    const orderRows = [
+      // Last 30 days: one paid ($100), one pending (doesn't count toward revenue).
+      { ...ORDER_ROW_A, id: "a", status: "paid", total_cents: 10000, created_at: iso(5) },
+      { ...ORDER_ROW_A, id: "c", status: "pending", total_cents: 5000, created_at: iso(2) },
+      // Prior 30-day period (31-60 days ago): one paid ($200).
+      { ...ORDER_ROW_A, id: "b", status: "paid", total_cents: 20000, created_at: iso(40) },
+    ];
+
+    getSupabaseAdminClientMock.mockReturnValue({
+      from: (table: string) => {
+        expect(table).toBe("orders");
+        return {
+          select: (_columns: string, opts?: { head?: boolean }) => {
+            if (opts?.head) return Promise.resolve({ error: null });
+            return { order: () => Promise.resolve({ data: orderRows, error: null }) };
+          },
+        };
+      },
+    });
+    const { fetchDashboardOverview } = await import("./admin-data");
+
+    const overview = await fetchDashboardOverview();
+
+    // 2 orders in the last 30 days vs 1 in the prior 30 days -> +100%.
+    expect(overview.stats.orders30d.value).toBe("2");
+    expect(overview.stats.orders30d.trend).toBe("up");
+    expect(overview.totalOrdersLast30Days).toBe(2);
+
+    // $100 paid revenue in the last 30 days vs $200 prior -> -50%.
+    expect(overview.stats.revenue30d.value).toBe("$100");
+    expect(overview.stats.revenue30d.trend).toBe("down");
+
+    expect(overview.ordersTrend).toHaveLength(30);
+    expect(overview.ordersTrend.reduce((sum, p) => sum + p.value, 0)).toBe(2);
+
+    expect(overview.revenueByMonth).toHaveLength(6);
+    expect(overview.revenueByMonth.reduce((sum, p) => sum + p.revenueCents, 0)).toBe(30000);
+  });
 });
 
 describe("fetchAdminProducts", () => {

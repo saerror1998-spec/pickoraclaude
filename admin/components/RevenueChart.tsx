@@ -6,14 +6,23 @@ import { TrendBadge } from "./TrendBadge";
 import { formatPrice } from "@/lib/format";
 import type { MonthlyRevenuePoint } from "@/lib/types";
 
-export function RevenueChart({
-  data,
-  highlightMonth,
-}: {
-  data: MonthlyRevenuePoint[];
-  highlightMonth: string;
-}) {
-  const highlighted = data.find((d) => d.month === highlightMonth);
+export function RevenueChart({ data }: { data: MonthlyRevenuePoint[] }) {
+  // Always highlight the most recent month — the last entry, since callers
+  // pass these oldest-first.
+  const highlighted = data.at(-1);
+  const previous = data.at(-2);
+  const trend =
+    previous && previous.revenueCents > 0
+      ? (highlighted?.revenueCents ?? 0) > previous.revenueCents
+        ? "up"
+        : (highlighted?.revenueCents ?? 0) < previous.revenueCents
+          ? "down"
+          : "flat"
+      : "flat";
+  const deltaLabel =
+    previous && previous.revenueCents > 0
+      ? `${(((highlighted?.revenueCents ?? 0) - previous.revenueCents) / previous.revenueCents * 100).toFixed(1)}% vs ${previous.month}`
+      : "No prior-month data";
 
   return (
     <Card>
@@ -22,8 +31,8 @@ export function RevenueChart({
           {highlighted ? formatPrice(highlighted.revenueCents) : "—"}
         </span>
         <div className="flex items-center gap-2 text-sm text-text-muted">
-          <span>Revenue from campaigns in {highlightMonth}</span>
-          <TrendBadge deltaLabel="+5.2%" trend="up" />
+          <span>Paid revenue in {highlighted?.month ?? "—"}</span>
+          <TrendBadge deltaLabel={deltaLabel} trend={trend} />
         </div>
       </div>
 
@@ -49,10 +58,10 @@ export function RevenueChart({
               labelStyle={{ color: "var(--color-text-muted)" }}
             />
             <Bar dataKey="revenueCents" radius={[4, 4, 0, 0]}>
-              {data.map((entry) => (
+              {data.map((entry, i) => (
                 <Cell
-                  key={entry.month}
-                  fill={entry.month === highlightMonth ? "var(--color-positive)" : "var(--color-card-border)"}
+                  key={`${entry.month}-${i}`}
+                  fill={i === data.length - 1 ? "var(--color-positive)" : "var(--color-card-border)"}
                 />
               ))}
             </Bar>
