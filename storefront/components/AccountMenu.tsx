@@ -1,24 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
 
 export function AccountMenu() {
-  const { user, loading, signInWithGoogle } = useAuth();
+  const { user, loading } = useAuth();
   const pathname = usePathname();
-  const [busy, setBusy] = useState(false);
-
-  async function handleSignIn() {
-    setBusy(true);
-    try {
-      await signInWithGoogle(pathname);
-    } catch {
-      setBusy(false);
-    }
-  }
 
   if (loading) {
     return <div className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-ink/10" aria-hidden />;
@@ -26,14 +15,12 @@ export function AccountMenu() {
 
   if (!user) {
     return (
-      <button
-        type="button"
-        onClick={handleSignIn}
-        disabled={busy}
-        className="rounded-[var(--radius-pill)] border border-ink/15 px-4 py-1.5 text-sm text-ink transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-ink/5 disabled:opacity-50"
+      <Link
+        href={`/login?next=${encodeURIComponent(pathname)}`}
+        className="rounded-[var(--radius-pill)] border border-ink/15 px-4 py-1.5 text-sm text-ink transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-ink/5"
       >
         Sign in
-      </button>
+      </Link>
     );
   }
 
