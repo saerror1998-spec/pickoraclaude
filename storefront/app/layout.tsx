@@ -7,6 +7,7 @@ import { WishlistProvider } from "@/components/WishlistProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { PageTransition } from "@/components/PageTransition";
 import { Footer } from "@/components/Footer";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </CartProvider>
         </AuthProvider>
         <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   );
