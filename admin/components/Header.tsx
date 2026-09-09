@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SearchIcon, BellIcon } from "./icons";
 import { UserMenu } from "./UserMenu";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -35,12 +36,12 @@ export async function Header() {
           <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-negative" />
         </button>
 
-        <button
-          type="button"
+        <Link
+          href="/products/new"
           className="rounded-[var(--radius-pill)] bg-text px-4 py-2 text-sm font-medium text-bg transition-transform duration-150 ease-[var(--ease-expo-out)] hover:scale-[1.03]"
         >
           + New Product
-        </button>
+        </Link>
 
         {email ? (
           <UserMenu email={email} />

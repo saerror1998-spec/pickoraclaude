@@ -6,6 +6,7 @@ import type {
   AdminCustomer,
   AdminOrder,
   AdminProduct,
+  AdminProductDetail,
   CatalogComposition,
   DailyPoint,
   DashboardOverview,
@@ -51,6 +52,45 @@ export async function fetchDashboardOverview(): Promise<DashboardOverview> {
   }
 }
 
+const PRODUCT_DETAIL_COLUMNS =
+  "id, slug, name, brand, image, processor, ram_gb, storage_gb, price_cents, original_price_cents, compatibility, condition, in_stock, sku, spec_text";
+
+function mapProductDetailRow(row: {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  image: string;
+  processor: string;
+  ram_gb: number;
+  storage_gb: number;
+  price_cents: number;
+  original_price_cents: number | null;
+  compatibility: string[] | null;
+  condition: AdminProductDetail["condition"];
+  in_stock: boolean;
+  sku: string | null;
+  spec_text: string | null;
+}): AdminProductDetail {
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: row.name,
+    brand: row.brand,
+    image: row.image,
+    processor: row.processor,
+    ramGb: row.ram_gb,
+    storageGb: row.storage_gb,
+    priceCents: row.price_cents,
+    originalPriceCents: row.original_price_cents,
+    compatibility: row.compatibility ?? [],
+    condition: row.condition,
+    inStock: row.in_stock,
+    sku: row.sku,
+    specText: row.spec_text,
+  };
+}
+
 /** Loads the product catalog for the Products admin section (real Supabase data). */
 export async function fetchAdminProducts(): Promise<AdminProduct[]> {
   const supabase = getSupabaseClient();
@@ -59,7 +99,7 @@ export async function fetchAdminProducts(): Promise<AdminProduct[]> {
   try {
     const { data, error } = await supabase
       .from("products")
-      .select("id, name, brand, price_cents, in_stock, condition")
+      .select("id, slug, name, brand, image, price_cents, in_stock, condition")
       .order("name", { ascending: true });
 
     if (error) throw error;
@@ -67,14 +107,37 @@ export async function fetchAdminProducts(): Promise<AdminProduct[]> {
 
     return data.map((row): AdminProduct => ({
       id: row.id,
+      slug: row.slug,
       name: row.name,
       brand: row.brand,
+      image: row.image,
       priceCents: row.price_cents,
       inStock: row.in_stock,
       condition: row.condition,
     }));
   } catch (cause) {
     throw new AdminDataError("Failed to load products", cause);
+  }
+}
+
+/** Loads one product's full editable fields for the create/edit form. Returns null when not found. */
+export async function fetchAdminProduct(id: string): Promise<AdminProductDetail | null> {
+  const supabase = getSupabaseAdminClient();
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select(PRODUCT_DETAIL_COLUMNS)
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return null;
+
+    return mapProductDetailRow(data);
+  } catch (cause) {
+    throw new AdminDataError(`Failed to load product "${id}"`, cause);
   }
 }
 

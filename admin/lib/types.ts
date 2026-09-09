@@ -45,11 +45,32 @@ export type DashboardOverview = {
 
 export type AdminProduct = {
   id: string;
+  slug: string;
   name: string;
   brand: string;
+  image: string;
   priceCents: number;
   inStock: boolean;
   condition: "Excellent" | "Good" | "Fair";
+};
+
+/** Full editable record for the product create/edit form — mirrors the storefront's Product shape. */
+export type AdminProductDetail = {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  image: string;
+  processor: string;
+  ramGb: number;
+  storageGb: number;
+  priceCents: number;
+  originalPriceCents: number | null;
+  compatibility: string[];
+  condition: "Excellent" | "Good" | "Fair";
+  inStock: boolean;
+  sku: string | null;
+  specText: string | null;
 };
 
 export type OrderLineItem = {
