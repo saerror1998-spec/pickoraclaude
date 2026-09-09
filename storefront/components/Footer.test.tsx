@@ -24,11 +24,31 @@ describe("Footer", () => {
     expect(screen.getAllByText(new RegExp(year)).length).toBeGreaterThan(0);
   });
 
-  it("links to pages that actually exist in this app", () => {
+  it("links to pages that actually exist in this app, plus the real social profiles", () => {
     render(<Footer />);
     const hrefs = screen.getAllByRole("link").map((el) => el.getAttribute("href"));
+    const allowed = [
+      "/shop",
+      "/warranty",
+      "/support",
+      "/account",
+      "https://www.instagram.com/pickora.online",
+      "https://www.tiktok.com/@pickora.online",
+    ];
     for (const href of hrefs) {
-      expect(["/shop", "/warranty", "/support", "/account"]).toContain(href);
+      expect(allowed).toContain(href);
     }
+  });
+
+  it("links to the real Instagram and TikTok profiles, opening in a new tab", () => {
+    render(<Footer />);
+
+    const instagram = screen.getAllByRole("link", { name: "Instagram" })[0];
+    expect(instagram).toHaveAttribute("href", "https://www.instagram.com/pickora.online");
+    expect(instagram).toHaveAttribute("target", "_blank");
+    expect(instagram).toHaveAttribute("rel", "noopener noreferrer");
+
+    const tiktok = screen.getAllByRole("link", { name: "TikTok" })[0];
+    expect(tiktok).toHaveAttribute("href", "https://www.tiktok.com/@pickora.online");
   });
 });

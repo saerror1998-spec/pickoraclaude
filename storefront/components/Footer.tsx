@@ -9,6 +9,52 @@ import { prefersReducedMotion } from "@/lib/motion";
 
 const YEAR = new Date().getFullYear();
 
+const SOCIAL_LINKS = [
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/pickora.online",
+    icon: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
+      </>
+    ),
+  },
+  {
+    name: "TikTok",
+    href: "https://www.tiktok.com/@pickora.online",
+    icon: (
+      <path
+        d="M14 3v10.5a3 3 0 1 1-2-2.83V13a1 1 0 0 0-1-1 1 1 0 0 0 0 2 1 1 0 0 0 1-1V3h2Zm2.5 2.2A4.2 4.2 0 0 0 20 8.5v2a6.2 6.2 0 0 1-3.5-1.07V13a5 5 0 1 1-5-5c.17 0 .33.01.5.03v2.02A3 3 0 1 0 15 13V3h1.5v2.2Z"
+        fill="currentColor"
+      />
+    ),
+  },
+];
+
+function SocialLinks({ className = "" }: { className?: string }) {
+  return (
+    <>
+      {SOCIAL_LINKS.map((social) => (
+        <a
+          key={social.name}
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={social.name}
+          title={social.name}
+          className={className}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            {social.icon}
+          </svg>
+        </a>
+      ))}
+    </>
+  );
+}
+
 /**
  * Cinematic "curtain reveal" footer for desktop: the outer wrapper sits in
  * normal flow with a clip-path, so the inner `fixed` footer beneath it only
@@ -167,16 +213,20 @@ function CinematicFooter() {
             Every laptop, inspected and warrantied.
           </p>
 
-          <MagneticButton
-            as="button"
-            onClick={scrollToTop}
-            className="order-3 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/60 backdrop-blur-md transition-colors hover:text-white"
-          >
-            <span className="sr-only">Back to top</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </MagneticButton>
+          <div className="order-3 flex items-center gap-3">
+            <SocialLinks className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/60 backdrop-blur-md transition-colors hover:text-white" />
+
+            <MagneticButton
+              as="button"
+              onClick={scrollToTop}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/60 backdrop-blur-md transition-colors hover:text-white"
+            >
+              <span className="sr-only">Back to top</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </MagneticButton>
+          </div>
         </div>
       </footer>
     </div>
@@ -198,6 +248,10 @@ function SimpleFooter() {
           <Link href="/support">Support</Link>
           <Link href="/account">Your account</Link>
         </nav>
+
+        <div className="mt-6 flex items-center gap-3">
+          <SocialLinks className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/60 transition-colors hover:text-white" />
+        </div>
 
         <p className="mt-8 text-xs text-white/40">© {YEAR} Pickora. All rights reserved.</p>
       </div>
