@@ -50,3 +50,34 @@ describe("ShopPage", () => {
     expect(await screen.findByText(/couldn.?t load/i)).toBeInTheDocument();
   });
 });
+
+describe("ShopPage generateMetadata", () => {
+  it("returns the generic catalog title with no brand filter", async () => {
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({ searchParams: Promise.resolve({}), params: Promise.resolve({}) });
+
+    expect(meta.title).toBe("Shop All Refurbished Laptops | Dell, HP & Lenovo | Pickora");
+  });
+
+  it("returns a real, unique title for a known brand", async () => {
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      searchParams: Promise.resolve({ brand: "Dell" }),
+      params: Promise.resolve({}),
+    });
+
+    expect(meta.title).toBe("Refurbished Dell Laptops in the UAE | Latitude & Inspiron | Pickora");
+    expect(meta.description).toContain("Dell");
+  });
+
+  it("still generates a unique (not generic-fallback) title for a brand outside the fixed list", async () => {
+    const { generateMetadata } = await import("./page");
+    const meta = await generateMetadata({
+      searchParams: Promise.resolve({ brand: "Asus" }),
+      params: Promise.resolve({}),
+    });
+
+    expect(meta.title).toBe("Refurbished Asus Laptops UAE | Pickora");
+    expect(meta.title).not.toBe("Shop All Refurbished Laptops | Dell, HP & Lenovo | Pickora");
+  });
+});

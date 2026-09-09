@@ -1,19 +1,57 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ProductInfoAccordion } from "@/components/ProductInfoAccordion";
-import { fetchProductBySlug, formatPrice, ProductFetchError } from "@/lib/products";
+import { fetchProductBySlug, formatPrice, getSavePercent, ProductFetchError } from "@/lib/products";
+import type { Product } from "@/lib/types";
 
 const TRUST_BADGES = [
   { icon: "↩", label: "90-day warranty" },
   { icon: "⚡", label: "Free shipping" },
   { icon: "$", label: "Price match" },
 ] as const;
+
+export async function generateMetadata({ params }: PageProps<"/products/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await fetchProductBySlug(slug).catch(() => null);
+  if (!product) return { title: "Laptop not found | Pickora" };
+
+  const savePercent = getSavePercent(product);
+  const title = `${product.name} (${product.storageGb}GB/${product.ramGb}GB) – Refurbished | Pickora`;
+  const description = `Buy the ${product.name} refurbished — ${product.condition}, ${product.ramGb}GB/${product.storageGb}GB, ${product.processor}. 90-day warranty, free UAE shipping. ${formatPrice(product.priceCents)}${savePercent !== null ? ` (save ${savePercent}%)` : ""}.`;
+
+  return {
+    title,
+    description,
+    openGraph: { title, description, images: [product.image] },
+  };
+}
+
+function productJsonLd(product: Product) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.image,
+    brand: { "@type": "Brand", name: product.brand },
+    sku: product.sku,
+    description: product.specText || `${product.processor}, ${product.ramGb}GB RAM, ${product.storageGb}GB storage`,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: process.env.NEXT_PUBLIC_STORE_CURRENCY ?? "USD",
+      price: (product.priceCents / 100).toFixed(2),
+      availability: product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      url: `https://store.pickoraonline.com/products/${product.slug}`,
+    },
+    itemCondition: "https://schema.org/RefurbishedCondition",
+  };
+}
 
 export default async function ProductDetailPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
@@ -39,13 +77,14 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
   if (!product) notFound();
 
-  const savePercent =
-    product.originalPriceCents && product.originalPriceCents > product.priceCents
-      ? Math.round((1 - product.priceCents / product.originalPriceCents) * 100)
-      : null;
+  const savePercent = getSavePercent(product);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(product)) }}
+      />
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-[1200px] px-[var(--gutter-mobile)] py-8 md:px-[var(--gutter-desktop)]">

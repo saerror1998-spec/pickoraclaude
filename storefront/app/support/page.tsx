@@ -3,7 +3,9 @@ import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 
 export const metadata = {
-  title: "Support — Pickora",
+  title: "Support & Help Center | Pickora UAE",
+  description:
+    "Questions about your order, warranty, or a laptop on Pickora? Get help here or WhatsApp our UAE support team directly.",
 };
 
 const SUPPORT_EMAIL = "hello@pickoraonline.com";
@@ -38,9 +40,20 @@ const FAQS = [
   },
 ];
 
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+
 export default function SupportPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }} />
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-[720px] px-[var(--gutter-mobile)] py-16 md:px-[var(--gutter-desktop)]">

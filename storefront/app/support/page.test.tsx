@@ -47,4 +47,14 @@ describe("SupportPage", () => {
 
     expect(screen.getByRole("link", { name: "Read the warranty" })).toHaveAttribute("href", "/warranty");
   });
+
+  it("includes real FAQPage structured data matching the on-page questions", () => {
+    const { container } = renderSupportPage();
+
+    const jsonLd = container.querySelector('script[type="application/ld+json"]');
+    expect(jsonLd).toBeInTheDocument();
+    const data = JSON.parse(jsonLd!.innerHTML);
+    expect(data["@type"]).toBe("FAQPage");
+    expect(data.mainEntity.map((q: { name: string }) => q.name)).toContain("Where's my order?");
+  });
 });

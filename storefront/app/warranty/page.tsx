@@ -3,7 +3,9 @@ import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 
 export const metadata = {
-  title: "Warranty — Pickora",
+  title: "90-Day Warranty on Every Laptop | Pickora UAE",
+  description:
+    "Every laptop from Pickora ships with a 90-day warranty. See what's covered, how claims work, and why refurbished doesn't mean risky.",
 };
 
 const COVERED = [
