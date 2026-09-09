@@ -18,6 +18,16 @@ describe("CatalogSection", () => {
     expect(screen.getByText("HP One")).toBeInTheDocument();
   });
 
+  it("shows a generic heading when no initial brand is given", () => {
+    render(<CatalogSection products={products} />);
+    expect(screen.getByRole("heading", { level: 1, name: "All laptops" })).toBeInTheDocument();
+  });
+
+  it("shows a brand-specific heading when an initial brand is given", () => {
+    render(<CatalogSection products={products} initialBrand="Dell" />);
+    expect(screen.getByRole("heading", { level: 1, name: "Dell laptops" })).toBeInTheDocument();
+  });
+
   it("pre-filters to the given initialBrand and shows a removable chip", () => {
     render(<CatalogSection products={products} initialBrand="Dell" />);
 

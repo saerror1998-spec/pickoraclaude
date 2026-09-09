@@ -41,7 +41,11 @@ export function CatalogSection({
 
   return (
     <section id="catalog" className="mx-auto max-w-[1400px] px-[var(--gutter-mobile)] py-16 md:px-[var(--gutter-desktop)]">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
+      <h1 className="type-label-md text-ink">
+        {initialBrand ? `${initialBrand} laptops` : "All laptops"}
+      </h1>
+
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
         <aside className="hidden lg:block">
           <FilterSidebar filters={filters} onChange={setFilters} brands={brands} />
         </aside>

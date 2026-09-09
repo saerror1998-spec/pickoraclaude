@@ -88,7 +88,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               <ScrollReveal
                 as="h1"
                 lines={[product.name]}
-                className="mt-2 text-[clamp(1.75rem,3.2vw,2.75rem)] leading-[1.1] text-ink"
+                className="mt-2 text-[clamp(1.75rem,3.2vw,2.75rem)] leading-[1.1] tracking-tight text-ink"
                 immediate
               />
 
