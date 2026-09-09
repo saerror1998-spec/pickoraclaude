@@ -26,4 +26,8 @@ export type ProductFilters = {
   priceMin: number | null;
   priceMax: number | null;
   brand: string | null;
+  ramMin: number | null;
+  ramMax: number | null;
+  storageMin: number | null;
+  storageMax: number | null;
 };

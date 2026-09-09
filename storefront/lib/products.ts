@@ -123,6 +123,10 @@ export function filterProducts(products: Product[], filters: ProductFilters): Pr
     if (filters.priceMin != null && product.priceCents < filters.priceMin) return false;
     if (filters.priceMax != null && product.priceCents > filters.priceMax) return false;
     if (filters.brand != null && product.brand !== filters.brand) return false;
+    if (filters.ramMin != null && product.ramGb < filters.ramMin) return false;
+    if (filters.ramMax != null && product.ramGb > filters.ramMax) return false;
+    if (filters.storageMin != null && product.storageGb < filters.storageMin) return false;
+    if (filters.storageMax != null && product.storageGb > filters.storageMax) return false;
     return true;
   });
 }

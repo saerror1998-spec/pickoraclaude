@@ -2,7 +2,16 @@ import { describe, expect, it, afterEach } from "vitest";
 import { filterProducts, sortProducts, formatPrice, getSavePercent } from "./products";
 import { SAMPLE_PRODUCTS } from "./sample-data";
 
-const EMPTY_FILTERS = { compatibility: [], priceMin: null, priceMax: null, brand: null };
+const EMPTY_FILTERS = {
+  compatibility: [],
+  priceMin: null,
+  priceMax: null,
+  brand: null,
+  ramMin: null,
+  ramMax: null,
+  storageMin: null,
+  storageMax: null,
+};
 
 describe("filterProducts", () => {
   it("returns all products when filters are empty", () => {
@@ -26,6 +35,18 @@ describe("filterProducts", () => {
     const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, brand });
     expect(result.length).toBeGreaterThan(0);
     expect(result.every((p) => p.brand === brand)).toBe(true);
+  });
+
+  it("filters by RAM range", () => {
+    const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, ramMin: 9, ramMax: 16 });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every((p) => p.ramGb >= 9 && p.ramGb <= 16)).toBe(true);
+  });
+
+  it("filters by storage range", () => {
+    const result = filterProducts(SAMPLE_PRODUCTS, { ...EMPTY_FILTERS, storageMin: 257, storageMax: 512 });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every((p) => p.storageGb >= 257 && p.storageGb <= 512)).toBe(true);
   });
 
   it("returns an empty array when no product matches", () => {

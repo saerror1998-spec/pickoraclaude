@@ -4,7 +4,16 @@ import userEvent from "@testing-library/user-event";
 import { FilterSidebar } from "./FilterSidebar";
 import type { ProductFilters } from "@/lib/types";
 
-const EMPTY_FILTERS: ProductFilters = { compatibility: [], priceMin: null, priceMax: null, brand: null };
+const EMPTY_FILTERS: ProductFilters = {
+  compatibility: [],
+  priceMin: null,
+  priceMax: null,
+  brand: null,
+  ramMin: null,
+  ramMax: null,
+  storageMin: null,
+  storageMax: null,
+};
 const BRANDS = ["Dell", "HP", "Lenovo"];
 
 describe("FilterSidebar", () => {
@@ -97,5 +106,25 @@ describe("FilterSidebar", () => {
     );
 
     expect(screen.getByRole("combobox")).toHaveValue("Dell");
+  });
+
+  it("selects a RAM range on click", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<FilterSidebar filters={EMPTY_FILTERS} onChange={onChange} brands={BRANDS} />);
+
+    await user.click(screen.getByText("16GB"));
+
+    expect(onChange).toHaveBeenCalledWith({ ...EMPTY_FILTERS, ramMin: 9, ramMax: 16 });
+  });
+
+  it("selects a storage range on click", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<FilterSidebar filters={EMPTY_FILTERS} onChange={onChange} brands={BRANDS} />);
+
+    await user.click(screen.getByText("512GB"));
+
+    expect(onChange).toHaveBeenCalledWith({ ...EMPTY_FILTERS, storageMin: 257, storageMax: 512 });
   });
 });

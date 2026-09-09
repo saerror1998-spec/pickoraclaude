@@ -7,7 +7,16 @@ import { SortDropdown } from "./SortDropdown";
 import { filterProducts, sortProducts } from "@/lib/products";
 import type { Product, ProductFilters, SortOption } from "@/lib/types";
 
-const EMPTY_FILTERS: ProductFilters = { compatibility: [], priceMin: null, priceMax: null, brand: null };
+const EMPTY_FILTERS: ProductFilters = {
+  compatibility: [],
+  priceMin: null,
+  priceMax: null,
+  brand: null,
+  ramMin: null,
+  ramMax: null,
+  storageMin: null,
+  storageMax: null,
+};
 
 export function CatalogSection({
   products,

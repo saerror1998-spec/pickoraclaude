@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { COMPATIBILITY_OPTIONS, PRICE_RANGES } from "@/lib/constants";
+import { COMPATIBILITY_OPTIONS, PRICE_RANGES, RAM_RANGES, STORAGE_RANGES } from "@/lib/constants";
 import { formatPrice } from "@/lib/products";
 import type { ProductFilters } from "@/lib/types";
 
@@ -31,6 +31,16 @@ export function FilterSidebar({ filters, onChange, brands, compact = false }: Fi
   function selectRange(min: number | null, max: number | null) {
     const isActive = filters.priceMin === min && filters.priceMax === max;
     onChange({ ...filters, priceMin: isActive ? null : min, priceMax: isActive ? null : max });
+  }
+
+  function selectRam(min: number | null, max: number | null) {
+    const isActive = filters.ramMin === min && filters.ramMax === max;
+    onChange({ ...filters, ramMin: isActive ? null : min, ramMax: isActive ? null : max });
+  }
+
+  function selectStorage(min: number | null, max: number | null) {
+    const isActive = filters.storageMin === min && filters.storageMax === max;
+    onChange({ ...filters, storageMin: isActive ? null : min, storageMax: isActive ? null : max });
   }
 
   const body = (
@@ -84,6 +94,50 @@ export function FilterSidebar({ filters, onChange, brands, compact = false }: Fi
                 }`}
               >
                 {rangeLabel(range.min, range.max)}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="mb-3 text-sm font-medium text-ink">RAM</legend>
+        <div className="space-y-2">
+          {RAM_RANGES.map((range) => {
+            const isActive = filters.ramMin === range.min && filters.ramMax === range.max;
+            return (
+              <button
+                key={range.label}
+                type="button"
+                onClick={() => selectRam(range.min, range.max)}
+                aria-pressed={isActive}
+                className={`block w-full rounded-[var(--radius-card-secondary)] px-3 py-2 text-left text-sm transition-colors duration-200 ease-[var(--ease-expo-out)] ${
+                  isActive ? "bg-ink text-white" : "bg-cream-warm text-taupe hover:bg-ink/5"
+                }`}
+              >
+                {range.label}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="mb-3 text-sm font-medium text-ink">Storage</legend>
+        <div className="space-y-2">
+          {STORAGE_RANGES.map((range) => {
+            const isActive = filters.storageMin === range.min && filters.storageMax === range.max;
+            return (
+              <button
+                key={range.label}
+                type="button"
+                onClick={() => selectStorage(range.min, range.max)}
+                aria-pressed={isActive}
+                className={`block w-full rounded-[var(--radius-card-secondary)] px-3 py-2 text-left text-sm transition-colors duration-200 ease-[var(--ease-expo-out)] ${
+                  isActive ? "bg-ink text-white" : "bg-cream-warm text-taupe hover:bg-ink/5"
+                }`}
+              >
+                {range.label}
               </button>
             );
           })}
