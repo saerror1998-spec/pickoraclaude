@@ -7,30 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MagneticButton } from "./MagneticButton";
 import { prefersReducedMotion } from "@/lib/motion";
 
-const MARQUEE_ITEMS = [
-  "Certified Refurbished",
-  "90-Day Warranty",
-  "Free Shipping",
-  "Price Match Guarantee",
-  "Professionally Inspected",
-];
-
-function Marquee() {
-  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
-  return (
-    <div className="flex w-max items-center gap-10 whitespace-nowrap px-5">
-      {items.map((item, i) => (
-        <span key={i} className="flex items-center gap-10">
-          {item}
-          <span aria-hidden className="text-accent/60">
-            ✦
-          </span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 const YEAR = new Date().getFullYear();
 
 /**
@@ -140,14 +116,7 @@ function CinematicFooter() {
           PICKORA
         </div>
 
-        <div className="absolute top-12 left-0 z-10 w-full -rotate-2 scale-110 overflow-hidden border-y border-white/10 bg-ink/60 py-4 shadow-2xl backdrop-blur-md">
-          <div className="flex w-max animate-[footer-marquee_36s_linear_infinite] text-sm font-bold uppercase tracking-[0.3em] text-white/50">
-            <Marquee />
-            <Marquee />
-          </div>
-        </div>
-
-        <div className="relative z-10 mx-auto mt-20 flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-[var(--gutter-desktop)]">
+        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-[var(--gutter-desktop)]">
           <h2 ref={headingRef} className="mb-12 text-center text-5xl font-black tracking-tighter text-white md:text-7xl">
             Find your next laptop.
           </h2>

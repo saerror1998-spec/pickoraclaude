@@ -88,12 +88,6 @@ h1, h2, h3, h4 {
   100% { filter: blur(0); }
 }
 
-/* Infinite horizontal scroll used by the Footer's marquee band. */
-@keyframes footer-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 /* Split-shutter page transition used by PageTransition.tsx. */
 @keyframes page-transition-shutter-top {
   from { transform: translate3d(0, 0, 0); }
