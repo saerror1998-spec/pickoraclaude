@@ -8,6 +8,54 @@ import { MagneticButton } from "./MagneticButton";
 import { prefersReducedMotion } from "@/lib/motion";
 
 const YEAR = new Date().getFullYear();
+const SUPPORT_EMAIL = "hello@pickoraonline.com";
+
+const FOOTER_COLUMNS = [
+  {
+    heading: "Shop",
+    links: [
+      { label: "All laptops", href: "/shop" },
+      { label: "Why refurbished", href: "/#why-pickora" },
+      { label: "Warranty", href: "/warranty" },
+    ],
+  },
+  {
+    heading: "Account",
+    links: [
+      { label: "Your account", href: "/account" },
+      { label: "Cart", href: "/cart" },
+      { label: "Sign in", href: "/login" },
+    ],
+  },
+  {
+    heading: "Support",
+    links: [
+      { label: "Support center", href: "/support" },
+      { label: `Email ${SUPPORT_EMAIL}`, href: `mailto:${SUPPORT_EMAIL}` },
+    ],
+  },
+] as const;
+
+function FooterColumns({ headingClassName, linkClassName }: { headingClassName: string; linkClassName: string }) {
+  return (
+    <>
+      {FOOTER_COLUMNS.map((column) => (
+        <div key={column.heading}>
+          <p className={headingClassName}>{column.heading}</p>
+          <ul className="mt-3 flex flex-col gap-2">
+            {column.links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={linkClassName}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </>
+  );
+}
 
 const SOCIAL_LINKS = [
   {
@@ -204,7 +252,14 @@ function CinematicFooter() {
           </div>
         </div>
 
-        <div className="relative z-20 flex w-full flex-col items-center justify-between gap-6 px-[var(--gutter-desktop)] pb-8 md:flex-row">
+        <div className="relative z-20 mx-auto grid w-full max-w-5xl grid-cols-2 gap-8 px-[var(--gutter-desktop)] pb-10 sm:grid-cols-3">
+          <FooterColumns
+            headingClassName="text-xs font-semibold uppercase tracking-widest text-white/40"
+            linkClassName="text-sm text-white/70 transition-colors hover:text-white"
+          />
+        </div>
+
+        <div className="relative z-20 flex w-full flex-col items-center justify-between gap-6 border-t border-white/10 px-[var(--gutter-desktop)] pb-8 pt-8 md:flex-row">
           <p className="order-2 text-xs font-semibold uppercase tracking-widest text-white/40 md:order-1">
             © {YEAR} Pickora. All rights reserved.
           </p>
@@ -242,11 +297,11 @@ function SimpleFooter() {
           Certified refurbished laptops — inspected, restored, and warrantied.
         </p>
 
-        <nav aria-label="Footer" className="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70">
-          <Link href="/shop">Shop</Link>
-          <Link href="/warranty">Warranty</Link>
-          <Link href="/support">Support</Link>
-          <Link href="/account">Your account</Link>
+        <nav aria-label="Footer" className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3">
+          <FooterColumns
+            headingClassName="text-xs font-semibold uppercase tracking-widest text-white/40"
+            linkClassName="text-sm text-white/70 transition-colors hover:text-white"
+          />
         </nav>
 
         <div className="mt-6 flex items-center gap-3">

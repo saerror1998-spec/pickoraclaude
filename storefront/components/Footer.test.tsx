@@ -32,12 +32,27 @@ describe("Footer", () => {
       "/warranty",
       "/support",
       "/account",
+      "/cart",
+      "/login",
+      "/#why-pickora",
+      "mailto:hello@pickoraonline.com",
       "https://www.instagram.com/pickora.online",
       "https://www.tiktok.com/@pickora.online",
     ];
     for (const href of hrefs) {
       expect(allowed).toContain(href);
     }
+  });
+
+  it("renders the Shop, Account, and Support link columns with real destinations", () => {
+    render(<Footer />);
+
+    expect(screen.getAllByText("Shop").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Account").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Support").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Your account" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Sign in" }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: /Email hello@pickoraonline\.com/ }).length).toBeGreaterThan(0);
   });
 
   it("links to the real Instagram and TikTok profiles, opening in a new tab", () => {
