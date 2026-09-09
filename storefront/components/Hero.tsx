@@ -16,7 +16,7 @@ export function Hero({ product }: { product?: Product }) {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-cream to-cream-warm">
-      <div className="mx-auto flex max-w-[1400px] flex-col-reverse items-center gap-16 px-[var(--gutter-mobile)] py-20 md:px-[var(--gutter-desktop)] md:py-28 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+      <div className="mx-auto flex max-w-[1400px] flex-col-reverse items-center gap-16 px-[var(--gutter-mobile)] py-20 md:px-[var(--gutter-desktop)] md:py-28 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:px-16 xl:px-24">
         {/* Copy */}
         <div className="max-w-xl text-center lg:text-left">
           <p className="text-sm uppercase tracking-[0.2em] text-taupe-light">Certified refurbished</p>
