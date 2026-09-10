@@ -54,10 +54,10 @@ export default async function HomePage() {
       <Header />
       <main className="flex-1">
         <Hero product={pickHeroProduct(products)} />
-        <HomepageBuyersGuide products={products} />
         <BestOffers products={products} />
         <ShopByBrand products={products} />
         <BestLaptops products={products} />
+        <HomepageBuyersGuide products={products} />
         <WhyPickora />
         <Testimonials />
       </main>
