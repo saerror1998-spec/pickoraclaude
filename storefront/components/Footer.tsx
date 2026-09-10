@@ -34,6 +34,7 @@ const FOOTER_COLUMNS = [
     heading: "Support",
     links: [
       { label: "Support center", href: "/support" },
+      { label: "Delivery & coverage", href: "/delivery" },
       { label: `Email ${SUPPORT_EMAIL}`, href: `mailto:${SUPPORT_EMAIL}` },
     ],
   },
