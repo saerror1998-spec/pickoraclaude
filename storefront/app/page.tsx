@@ -8,13 +8,23 @@ import { WhyPickora } from "@/components/WhyPickora";
 import { Testimonials } from "@/components/Testimonials";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
-import { fetchProducts, ProductFetchError } from "@/lib/products";
+import { fetchProducts, ProductFetchError, getSavePercent } from "@/lib/products";
+import type { Product } from "@/lib/types";
 
 // Without this, Next.js statically prerenders this page at build time (it
 // has no explicit dynamic API usage for Next to detect), freezing prices,
 // stock, and the homepage's featured deal as of the last deploy — real
 // catalog changes wouldn't show up until the next rebuild.
 export const dynamic = "force-dynamic";
+
+/** The single product featured in the Hero's floating deal card — the biggest real discount among in-stock items. */
+function pickHeroProduct(products: Product[]): Product | undefined {
+  const inStock = products.filter((p) => p.inStock);
+  const bestDiscount = [...inStock]
+    .filter((p) => getSavePercent(p) !== null)
+    .sort((a, b) => (getSavePercent(b) ?? 0) - (getSavePercent(a) ?? 0))[0];
+  return bestDiscount ?? inStock[0];
+}
 
 export default async function HomePage() {
   let products;
@@ -43,10 +53,7 @@ export default async function HomePage() {
     <>
       <Header />
       <main className="flex-1">
-        <Hero
-          productCount={products.length}
-          brandCount={new Set(products.map((p) => p.brand)).size}
-        />
+        <Hero product={pickHeroProduct(products)} />
         <BestOffers products={products} />
         <ShopByBrand products={products} />
         <BestLaptops products={products} />
