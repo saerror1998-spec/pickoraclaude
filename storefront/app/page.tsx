@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { HomepageBuyersGuide } from "@/components/HomepageBuyersGuide";
 import { BestOffers } from "@/components/BestOffers";
-import { ShopByBrand } from "@/components/ShopByBrand";
+import { CategoryTiles } from "@/components/CategoryTiles";
 import { BestLaptops } from "@/components/BestLaptops";
 import { WhyPickora } from "@/components/WhyPickora";
 import { Testimonials } from "@/components/Testimonials";
@@ -55,7 +55,7 @@ export default async function HomePage() {
       <main className="flex-1">
         <Hero product={pickHeroProduct(products)} />
         <BestOffers products={products} />
-        <ShopByBrand products={products} />
+        <CategoryTiles products={products} />
         <BestLaptops products={products} />
         <HomepageBuyersGuide products={products} />
         <WhyPickora />
