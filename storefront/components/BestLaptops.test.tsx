@@ -38,7 +38,7 @@ describe("BestLaptops", () => {
     expect(screen.queryByText("Sold out")).not.toBeInTheDocument();
   });
 
-  it("caps the list at 60 products", () => {
+  it("caps the list at 8 products — a curated row, not the whole catalog", () => {
     const products: Product[] = Array.from({ length: 75 }, (_, i) => ({
       ...base,
       id: `p${i}`,
@@ -49,7 +49,7 @@ describe("BestLaptops", () => {
     }));
     renderLaptops(products);
 
-    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(60);
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(8);
   });
 
   it("links to /shop to see the full catalog", () => {

@@ -2,7 +2,11 @@ import Link from "next/link";
 import { ProductCard } from "./ProductCard";
 import type { Product } from "@/lib/types";
 
-const MAX_FEATURED = 60;
+// A site-review report flagged this section rendering up to 60 products —
+// effectively the whole catalog re-embedded on the homepage instead of a
+// curated highlight — as a heavy, purpose-diluting page that duplicates
+// /shop. Capped to a genuinely curated row instead; /shop is one click away.
+const MAX_FEATURED = 8;
 
 export function BestLaptops({ products }: { products: Product[] }) {
   const featured = products.filter((p) => p.condition === "Excellent" && p.inStock).slice(0, MAX_FEATURED);
