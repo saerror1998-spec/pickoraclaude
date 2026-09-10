@@ -35,6 +35,7 @@ describe("Footer", () => {
       "/cart",
       "/login",
       "/#why-pickora",
+      "/blog",
       "mailto:hello@pickoraonline.com",
       "https://www.instagram.com/pickora.online",
       "https://www.tiktok.com/@pickora.online",

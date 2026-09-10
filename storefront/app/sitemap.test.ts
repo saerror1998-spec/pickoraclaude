@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { SAMPLE_PRODUCTS } from "@/lib/sample-data";
+import { BLOG_POSTS } from "@/lib/blog-posts";
 
 const fetchProductsMock = vi.fn();
 vi.mock("@/lib/products", () => ({
@@ -20,8 +21,12 @@ describe("sitemap", () => {
 
     expect(urls).toContain("https://store.pickoraonline.com");
     expect(urls).toContain("https://store.pickoraonline.com/shop");
+    expect(urls).toContain("https://store.pickoraonline.com/blog");
     for (const product of SAMPLE_PRODUCTS) {
       expect(urls).toContain(`https://store.pickoraonline.com/products/${product.slug}`);
+    }
+    for (const post of BLOG_POSTS) {
+      expect(urls).toContain(`https://store.pickoraonline.com/blog/${post.slug}`);
     }
   });
 

@@ -18,6 +18,7 @@ const FOOTER_COLUMNS = [
       { label: "All laptops", href: "/shop" },
       { label: "Why refurbished", href: "/#why-pickora" },
       { label: "Warranty", href: "/warranty" },
+      { label: "Blog", href: "/blog" },
     ],
   },
   {

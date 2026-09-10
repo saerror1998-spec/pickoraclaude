@@ -1,15 +1,21 @@
 import type { MetadataRoute } from "next";
 import { fetchProducts } from "@/lib/products";
+import { BLOG_POSTS } from "@/lib/blog-posts";
 
 const SITE_URL = "https://store.pickoraonline.com";
 
-const STATIC_ROUTES = ["", "/shop", "/warranty", "/support"];
+const STATIC_ROUTES = ["", "/shop", "/warranty", "/support", "/blog"];
 
-/** Real sitemap: every static route plus every real product slug from Supabase. */
+/** Real sitemap: every static route, every blog post, plus every real product slug from Supabase. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified: new Date(),
+  }));
+
+  const blogEntries: MetadataRoute.Sitemap = BLOG_POSTS.map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.publishedAt),
   }));
 
   let productEntries: MetadataRoute.Sitemap = [];
@@ -25,5 +31,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // the product URLs.
   }
 
-  return [...staticEntries, ...productEntries];
+  return [...staticEntries, ...blogEntries, ...productEntries];
 }
