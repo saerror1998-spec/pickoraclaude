@@ -15,7 +15,7 @@ const RESOURCES: ResourceLink[] = [
   {
     name: "Admin (live)",
     description: "This dashboard, as deployed.",
-    href: "https://adminstack.pickoraonline.com",
+    href: "https://admin.pickoraonline.com",
   },
   {
     name: "Supabase project",
