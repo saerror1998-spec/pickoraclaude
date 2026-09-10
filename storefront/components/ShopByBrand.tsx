@@ -34,45 +34,50 @@ export function ShopByBrand({ products }: { products: Product[] }) {
       aria-label="Shop by brand"
       className="mx-auto max-w-[1400px] px-[var(--gutter-mobile)] pt-16 md:px-[var(--gutter-desktop)]"
     >
-      <h2 className="type-label-md text-ink">Shop by brand</h2>
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-glass-muted">Shop by brand</p>
+      <h2 className="mt-2 text-[clamp(1.75rem,3vw,2.5rem)] font-medium tracking-[-0.02em] text-glass-zinc">
+        Three brands. Every configuration.
+      </h2>
 
-      <div className="mt-6 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 md:gap-[var(--gutter-desktop)]">
-        {brands.map(({ brand, count, product }, i) => {
-          const dark = i % 2 === 1;
-          return (
-            <Link
-              key={brand}
-              href={`/brands/${brandSlug(brand)}`}
-              className={`group flex items-center gap-6 overflow-hidden rounded-[var(--radius-card)] p-6 shadow-[var(--shadow-soft)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-1 sm:p-8 ${
-                dark ? "bg-ink text-white" : "bg-white text-ink"
-              }`}
-            >
-              <div className="min-w-0 flex-1">
-                <span className="block text-xl font-medium sm:text-2xl">{brand}</span>
-                <span className={`mt-1 block text-sm ${dark ? "text-white/60" : "text-taupe"}`}>
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {brands.map(({ brand, count, product }) => (
+          <Link
+            key={brand}
+            href={`/brands/${brandSlug(brand)}`}
+            className="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-[var(--shadow-soft)] transition-transform duration-300 ease-[var(--ease-glass)] hover:-translate-y-1"
+          >
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-glass-light">
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="object-cover transition-transform duration-300 ease-[var(--ease-glass)] group-hover:scale-105"
+              />
+              <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
+            </div>
+
+            <div className="flex items-center justify-between gap-4 p-6">
+              <div className="min-w-0">
+                <span className="block text-xl font-medium tracking-[-0.02em] text-glass-zinc">{brand}</span>
+                <span className="mt-1 block text-sm text-glass-muted">
                   {count} laptop{count === 1 ? "" : "s"}
                 </span>
-                <span
-                  className={`mt-5 inline-flex items-center rounded-[var(--radius-pill)] px-5 py-2 text-sm font-medium transition-colors duration-200 ${
-                    dark ? "bg-cream text-ink group-hover:bg-white" : "bg-accent text-white group-hover:brightness-110"
-                  }`}
-                >
-                  Shop now
-                </span>
               </div>
-
-              <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-[var(--radius-card-secondary)] bg-cream-warm sm:w-32">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="128px"
-                  className="object-cover transition-transform duration-300 ease-[var(--ease-expo-out)] group-hover:scale-105"
-                />
-              </div>
-            </Link>
-          );
-        })}
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-glass-zinc text-white transition-colors duration-300 group-hover:bg-glass-violet">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );
