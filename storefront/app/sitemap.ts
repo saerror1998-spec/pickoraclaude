@@ -5,7 +5,16 @@ import { brandSlug } from "@/lib/brand-meta";
 
 const SITE_URL = "https://store.pickoraonline.com";
 
-const STATIC_ROUTES = ["", "/shop", "/warranty", "/support", "/blog", "/laptops-under-500-aed", "/delivery"];
+const STATIC_ROUTES = [
+  "",
+  "/shop",
+  "/warranty",
+  "/support",
+  "/blog",
+  "/laptops-under-500-aed",
+  "/delivery",
+  "/certification",
+];
 
 /** Real sitemap: every static route, every blog post, plus every real product slug from Supabase. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

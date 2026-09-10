@@ -18,6 +18,7 @@ const FOOTER_COLUMNS = [
       { label: "All laptops", href: "/shop" },
       { label: "Laptops under 500 AED", href: "/laptops-under-500-aed" },
       { label: "Why refurbished", href: "/#why-pickora" },
+      { label: "Our certification process", href: "/certification" },
       { label: "Warranty", href: "/warranty" },
       { label: "Blog", href: "/blog" },
     ],

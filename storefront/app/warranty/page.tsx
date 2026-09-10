@@ -22,9 +22,38 @@ const NOT_COVERED = [
   "Software, files, or accounts added after delivery",
 ];
 
+const FAQS = [
+  {
+    question: "What voids the warranty?",
+    answer:
+      "Accidental damage after delivery, unauthorized repairs or modifications, and normal cosmetic wear that was already disclosed in the listing's condition grade all fall outside the warranty — see \"What's not covered\" above for the full list.",
+  },
+  {
+    question: "Can I extend it?",
+    answer:
+      "Not currently — every laptop gets the same 90-day coverage on parts and workmanship, and we don't offer a paid extension beyond that right now.",
+  },
+  {
+    question: "What if a laptop arrives faulty?",
+    answer:
+      "It's covered from the moment it arrives. Email support with your order reference and what's wrong, and we'll sort out a repair, replacement, or refund depending on the issue.",
+  },
+] as const;
+
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+
 export default function WarrantyPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }} />
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-[720px] px-[var(--gutter-mobile)] py-16 md:px-[var(--gutter-desktop)]">
@@ -63,6 +92,27 @@ export default function WarrantyPage() {
                 ))}
               </ul>
             </div>
+          </div>
+
+          <div className="mt-14 flex flex-col gap-3">
+            <h2 className="text-base text-ink">FAQ</h2>
+            {FAQS.map((faq) => (
+              <details
+                key={faq.question}
+                className="group mt-2 rounded-[var(--radius-card-secondary)] bg-white p-5 shadow-[var(--shadow-soft)] open:pb-6"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base text-ink marker:content-none">
+                  {faq.question}
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-taupe-light transition-transform duration-200 ease-[var(--ease-expo-out)] group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm text-taupe">{faq.answer}</p>
+              </details>
+            ))}
           </div>
 
           <div className="mt-12 rounded-[var(--radius-card-secondary)] bg-cream-warm p-6">

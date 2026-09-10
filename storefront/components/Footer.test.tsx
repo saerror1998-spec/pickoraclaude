@@ -38,6 +38,7 @@ describe("Footer", () => {
       "/blog",
       "/laptops-under-500-aed",
       "/delivery",
+      "/certification",
       "mailto:hello@pickoraonline.com",
       "https://www.instagram.com/pickora.online",
       "https://www.tiktok.com/@pickora.online",
