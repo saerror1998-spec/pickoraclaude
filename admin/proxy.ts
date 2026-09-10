@@ -55,5 +55,10 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Excludes Next's internal asset routes plus anything in /public with a
+  // static-file extension (svg/png/ico/etc) — without the extension
+  // exclusion, an unauthenticated request for e.g. /pickora-icon.svg got
+  // redirected to /login instead of served, breaking any image the login
+  // page itself needs to show (a real bug this surfaced, not hypothetical).
+  matcher: ["/((?!_next/static|_next/image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|txt|xml)$).*)"],
 };

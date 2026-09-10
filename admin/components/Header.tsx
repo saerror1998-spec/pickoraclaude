@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SearchIcon, BellIcon } from "./icons";
 import { UserMenu } from "./UserMenu";
@@ -46,9 +47,7 @@ export async function Header() {
         {email ? (
           <UserMenu email={email} />
         ) : (
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-xs font-medium text-white">
-            P
-          </div>
+          <Image src="/pickora-icon.svg" alt="Pickora" width={32} height={32} />
         )}
       </div>
     </header>

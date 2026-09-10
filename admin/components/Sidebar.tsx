@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -89,7 +90,10 @@ export function Sidebar() {
     <>
       {/* Mobile top bar with menu toggle */}
       <div className="flex items-center justify-between border-b border-panel-border bg-panel px-4 py-3 md:hidden">
-        <span className="text-sm font-medium tracking-[-0.03em] text-text">Pickora Admin</span>
+        <div className="flex items-center gap-2">
+          <Image src="/pickora-icon.svg" alt="Pickora" width={24} height={24} />
+          <span className="text-sm font-medium tracking-[-0.03em] text-text">Pickora Admin</span>
+        </div>
         <button
           type="button"
           onClick={() => setMobileOpen((v) => !v)}
@@ -108,9 +112,7 @@ export function Sidebar() {
       {/* Desktop/tablet: icon+label sidebar, collapses to icons-only on tablet */}
       <aside className="hidden shrink-0 border-r border-panel-border bg-panel md:flex md:w-[72px] md:flex-col lg:w-[240px]">
         <div className="flex items-center gap-2 px-4 py-5">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-medium text-white">
-            P
-          </div>
+          <Image src="/pickora-icon.svg" alt="Pickora" width={28} height={28} className="shrink-0" />
           <span className="hidden truncate text-sm font-medium tracking-[-0.03em] text-text lg:inline">
             Pickora Admin
           </span>

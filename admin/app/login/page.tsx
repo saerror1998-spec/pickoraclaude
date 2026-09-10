@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState, type FormEvent } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 
@@ -50,9 +51,7 @@ function LoginForm() {
     <div className="flex min-h-screen items-center justify-center bg-bg px-4">
       <div className="w-full max-w-sm rounded-[var(--radius-card)] border border-card-border bg-card p-8 shadow-[var(--shadow-card)]">
         <div className="mb-6 flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-xs font-medium text-white">
-            P
-          </div>
+          <Image src="/pickora-icon.svg" alt="Pickora" width={32} height={32} />
           <span className="text-sm font-medium tracking-[-0.03em] text-text">Pickora Admin</span>
         </div>
 

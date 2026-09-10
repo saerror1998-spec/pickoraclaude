@@ -9,6 +9,9 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"], weight: "400
 export const metadata: Metadata = {
   title: "Pickora Admin",
   description: "Store operations, inventory, and performance metrics for Pickora.",
+  icons: {
+    icon: "/pickora-icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
