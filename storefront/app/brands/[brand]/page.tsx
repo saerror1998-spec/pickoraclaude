@@ -28,7 +28,12 @@ export async function generateMetadata({ params }: PageProps<"/brands/[brand]">)
   if (!realBrand) return { title: "Brand not found | Pickora" };
 
   const { title, description } = brandMeta(realBrand);
-  return { title, description };
+  return {
+    title,
+    description,
+    alternates: { canonical: `/brands/${slug}` },
+    openGraph: { title, description },
+  };
 }
 
 export default async function BrandPage({ params }: PageProps<"/brands/[brand]">) {

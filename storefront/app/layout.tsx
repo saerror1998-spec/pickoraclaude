@@ -31,6 +31,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/pickoralogi.svg",
   },
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: "Pickora",

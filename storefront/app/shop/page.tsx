@@ -4,21 +4,34 @@ import { CatalogSection } from "@/components/CatalogSection";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
 import { fetchProducts, ProductFetchError } from "@/lib/products";
-import { brandMeta } from "@/lib/brand-meta";
+import { brandMeta, brandSlug } from "@/lib/brand-meta";
 
 export async function generateMetadata({ searchParams }: PageProps<"/shop">): Promise<Metadata> {
   const { brand } = await searchParams;
   const brandName = typeof brand === "string" ? brand : null;
   if (!brandName) {
+    const title = "Shop All Refurbished Laptops | Dell, HP & Lenovo | Pickora";
+    const description =
+      "Browse Pickora's full catalog of certified refurbished laptops — Dell, HP & Lenovo from AED 525. Every unit inspected, cleaned and backed by a 90-day warranty.";
     return {
-      title: "Shop All Refurbished Laptops | Dell, HP & Lenovo | Pickora",
-      description:
-        "Browse Pickora's full catalog of certified refurbished laptops — Dell, HP & Lenovo from AED 525. Every unit inspected, cleaned and backed by a 90-day warranty.",
+      title,
+      description,
+      alternates: { canonical: "/shop" },
+      openGraph: { title, description },
     };
   }
 
   const { title, description } = brandMeta(brandName);
-  return { title, description };
+  return {
+    title,
+    description,
+    // /shop?brand=X and /brands/[brand] render the same content for a given
+    // brand — canonicalize the filtered query-param variant to the dedicated
+    // brand page so Google consolidates ranking signal onto one URL instead
+    // of splitting it across two near-duplicate pages.
+    alternates: { canonical: `/brands/${brandSlug(brandName)}` },
+    openGraph: { title, description },
+  };
 }
 
 export default async function ShopPage({ searchParams }: PageProps<"/shop">) {

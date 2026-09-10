@@ -2,10 +2,15 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 
+const TITLE = "90-Day Warranty on Every Laptop | Pickora UAE";
+const DESCRIPTION =
+  "Every laptop from Pickora ships with a 90-day warranty. See what's covered, how claims work, and why refurbished doesn't mean risky.";
+
 export const metadata = {
-  title: "90-Day Warranty on Every Laptop | Pickora UAE",
-  description:
-    "Every laptop from Pickora ships with a 90-day warranty. See what's covered, how claims work, and why refurbished doesn't mean risky.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/warranty" },
+  openGraph: { title: TITLE, description: DESCRIPTION },
 };
 
 const COVERED = [

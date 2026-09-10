@@ -3,10 +3,15 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 
+const TITLE = "How Our Certification Process Works | Pickora UAE";
+const DESCRIPTION =
+  "Every Pickora laptop passes a 4-step certification: diagnose, repair & replace, deep clean, grade & certify. See exactly what \"factory refurbished\" means here.";
+
 export const metadata = {
-  title: "How Our Certification Process Works | Pickora UAE",
-  description:
-    "Every Pickora laptop passes a 4-step certification: diagnose, repair & replace, deep clean, grade & certify. See exactly what \"factory refurbished\" means here.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/certification" },
+  openGraph: { title: TITLE, description: DESCRIPTION },
 };
 
 const STEPS = [
@@ -60,10 +65,24 @@ const FAQ_JSON_LD = {
   })),
 };
 
+const HOWTO_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: TITLE,
+  description: DESCRIPTION,
+  step: STEPS.map((s) => ({
+    "@type": "HowToStep",
+    position: Number(s.step),
+    name: s.title,
+    text: s.copy,
+  })),
+};
+
 export default function CertificationPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOWTO_JSON_LD) }} />
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-[720px] px-[var(--gutter-mobile)] py-16 md:px-[var(--gutter-desktop)]">

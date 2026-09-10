@@ -3,9 +3,14 @@ import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
+const TITLE = "Blog | Pickora";
+const DESCRIPTION = "Buying guides and straight answers about refurbished laptops in the UAE, from the Pickora team.";
+
 export const metadata = {
-  title: "Blog | Pickora",
-  description: "Buying guides and straight answers about refurbished laptops in the UAE, from the Pickora team.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/blog" },
+  openGraph: { title: TITLE, description: DESCRIPTION },
 };
 
 function formatDate(iso: string): string {

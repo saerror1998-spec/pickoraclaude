@@ -2,10 +2,15 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 
+const TITLE = "Support & Help Center | Pickora UAE";
+const DESCRIPTION =
+  "Questions about your order, warranty, or a laptop on Pickora? Get help here or WhatsApp our UAE support team directly.";
+
 export const metadata = {
-  title: "Support & Help Center | Pickora UAE",
-  description:
-    "Questions about your order, warranty, or a laptop on Pickora? Get help here or WhatsApp our UAE support team directly.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/support" },
+  openGraph: { title: TITLE, description: DESCRIPTION },
 };
 
 const SUPPORT_EMAIL = "hello@pickoraonline.com";

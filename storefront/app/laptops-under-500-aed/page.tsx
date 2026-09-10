@@ -7,10 +7,15 @@ import { fetchProducts, ProductFetchError } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 
+const TITLE = "Laptops Under 500 AED | Refurbished & Renewed | Pickora";
+const DESCRIPTION =
+  "Shop refurbished laptops under 500 AED in the UAE — Dell & HP Chromebooks, inspected and backed by a 90-day warranty. Free shipping across the UAE.";
+
 export const metadata = {
-  title: "Laptops Under 500 AED | Refurbished & Renewed | Pickora",
-  description:
-    "Shop refurbished laptops under 500 AED in the UAE — Dell & HP Chromebooks, inspected and backed by a 90-day warranty. Free shipping across the UAE.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/laptops-under-500-aed" },
+  openGraph: { title: TITLE, description: DESCRIPTION },
 };
 
 const PRICE_CEILING_CENTS = 50000;

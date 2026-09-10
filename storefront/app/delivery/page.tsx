@@ -2,10 +2,15 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 
+const TITLE = "UAE-Wide Delivery on Refurbished Laptops | Pickora";
+const DESCRIPTION =
+  "Pickora ships certified refurbished laptops across the UAE — free shipping, tracked delivery, 90-day warranty on every order.";
+
 export const metadata = {
-  title: "UAE-Wide Delivery on Refurbished Laptops | Pickora",
-  description:
-    "Pickora ships certified refurbished laptops across the UAE — free shipping, tracked delivery, 90-day warranty on every order.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/delivery" },
+  openGraph: { title: TITLE, description: DESCRIPTION },
 };
 
 const EMIRATES = ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "Ras Al Khaimah", "Fujairah", "Umm Al Quwain"];
