@@ -31,6 +31,24 @@
 
   --shadow-soft: 0 5px 24px rgba(11, 11, 12, 0.08);
   --shadow-deep: 0 30px 120px rgba(120, 108, 112, 0.22);
+
+  /* Glassmorphism redesign tokens — dark-mode glass surfaces layered on top
+     of the existing cream/ink palette above, not a replacement for it. Used
+     by the navbar, hero, and other dark sections introduced in the 2026
+     visual redesign. */
+  --color-glass-dark: #000000;
+  --color-glass-zinc: #18181b;
+  --color-glass-light: #f4f4f5;
+  --color-glass-muted: #71717a;
+  --color-glass-emerald: #34d399;
+  --glass-surface: rgba(255, 255, 255, 0.05);
+  --glass-surface-strong: rgba(255, 255, 255, 0.09);
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  --radius-section: 2.5rem;
+  --radius-section-mobile: 1.75rem;
+
+  --ease-glass: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
@@ -44,6 +62,11 @@
   --color-cream-warm: var(--color-cream-warm);
   --color-accent: var(--color-accent);
   --color-save: var(--color-save);
+  --color-glass-dark: var(--color-glass-dark);
+  --color-glass-zinc: var(--color-glass-zinc);
+  --color-glass-light: var(--color-glass-light);
+  --color-glass-muted: var(--color-glass-muted);
+  --color-glass-emerald: var(--color-glass-emerald);
   --font-sans: var(--font-sora);
   --font-body: var(--font-inter);
   --radius-card: var(--radius-card);
@@ -153,4 +176,41 @@ h1, h2, h3, h4 {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* --- Glassmorphism redesign utilities --- */
+
+/* Reusable glass-surface treatment for floating UI on dark sections
+   (navbar, hero info cards, search/cart overlays). Kept as a class rather
+   than inline styles so every glass element shares one edit point. */
+.glass-panel {
+  background: var(--glass-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+/* Fixed-position tileable noise, layered over dark sections at low opacity
+   so large flat #000/#18181B areas don't band or read as flat rectangles. */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s var(--ease-glass) both;
 }

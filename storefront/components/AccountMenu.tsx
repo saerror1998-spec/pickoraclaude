@@ -10,14 +10,14 @@ export function AccountMenu() {
   const pathname = usePathname();
 
   if (loading) {
-    return <div className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-ink/10" aria-hidden />;
+    return <div className="h-8 w-8 shrink-0 animate-pulse rounded-full bg-white/10" aria-hidden />;
   }
 
   if (!user) {
     return (
       <Link
         href={`/login?next=${encodeURIComponent(pathname)}`}
-        className="rounded-[var(--radius-pill)] border border-ink/15 px-4 py-1.5 text-sm text-ink transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-ink/5"
+        className="rounded-[var(--radius-pill)] border border-white/15 px-4 py-1.5 text-sm text-white/80 transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-white/10 hover:text-white"
       >
         Sign in
       </Link>

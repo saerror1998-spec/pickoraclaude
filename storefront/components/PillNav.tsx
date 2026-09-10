@@ -74,10 +74,7 @@ export function PillNav({ items }: { items: PillNavItem[] }) {
   }
 
   return (
-    <nav
-      aria-label="Primary"
-      className="hidden md:flex items-center rounded-[var(--radius-pill)] bg-ink px-1.5 py-1.5"
-    >
+    <nav aria-label="Primary" className="hidden md:flex items-center gap-1">
       <ul role="menubar" className="flex items-stretch gap-1 list-none m-0 p-0">
         {items.map((item, i) => {
           const isActive = pathname === item.href;
@@ -89,11 +86,11 @@ export function PillNav({ items }: { items: PillNavItem[] }) {
                 aria-label={item.label}
                 onMouseEnter={() => handleEnter(i)}
                 onMouseLeave={() => handleLeave(i)}
-                className="relative flex h-9 items-center justify-center overflow-hidden rounded-[var(--radius-pill)] px-5 text-sm font-medium text-cream transition-colors duration-200"
+                className="relative flex h-9 items-center justify-center overflow-hidden rounded-[var(--radius-pill)] px-4 text-sm font-medium text-white/80 transition-colors duration-200"
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-1/2 bottom-0 z-[1] block rounded-full bg-cream"
+                  className="pointer-events-none absolute left-1/2 bottom-0 z-[1] block rounded-full bg-white/10"
                   style={{ willChange: "transform" }}
                   ref={(el) => {
                     circleRefs.current[i] = el;
@@ -105,7 +102,7 @@ export function PillNav({ items }: { items: PillNavItem[] }) {
                   </span>
                   <span
                     aria-hidden="true"
-                    className="pill-label-hover absolute left-0 top-1 z-[3] inline-block w-full text-center text-ink"
+                    className="pill-label-hover absolute left-0 top-1 z-[3] inline-block w-full text-center text-white"
                     style={{ willChange: "transform, opacity" }}
                   >
                     {item.label}
@@ -115,7 +112,7 @@ export function PillNav({ items }: { items: PillNavItem[] }) {
                   <span
                     aria-hidden="true"
                     data-testid="pill-nav-active-dot"
-                    className="absolute -bottom-0.5 left-1/2 z-[4] h-1 w-1 -translate-x-1/2 rounded-full bg-cream"
+                    className="absolute -bottom-0.5 left-1/2 z-[4] h-1 w-1 -translate-x-1/2 rounded-full bg-glass-emerald"
                   />
                 )}
               </Link>

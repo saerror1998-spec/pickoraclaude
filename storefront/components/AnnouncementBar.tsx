@@ -1,31 +1,23 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect, useState } from "react";
-
-const MESSAGES = [
-  "Premium Refurbished Laptops • Dell, HP & Lenovo • Shop Pickora UAE",
-  "Quality Refurbished Laptops at Better Prices — Shop Dell, HP & Lenovo",
-  "Refurbished. Reliable. Ready for You. — Shop Laptops at Pickora",
-];
-
-const ROTATE_MS = 4500;
-
-/** Slim strip beneath the header that fades through a rotating set of taglines. */
+/** Slim premium strip above the navbar. Dark, static (no rotation/marquee), links to the catalog. */
 export function AnnouncementBar() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setIndex((current) => (current + 1) % MESSAGES.length);
-    }, ROTATE_MS);
-    return () => window.clearInterval(id);
-  }, []);
-
   return (
-    <div className="border-b border-ink/5 bg-cream-warm py-2 text-center text-xs font-medium text-taupe">
-      <p key={index} className="animate-[fade-slide-in_0.5s_var(--ease-expo-out)]">
-        {MESSAGES[index]}
-      </p>
-    </div>
+    <Link
+      href="/shop"
+      className="group flex items-center justify-center gap-2 bg-glass-dark py-2 text-center text-xs font-medium text-white/80 transition-colors duration-300 hover:text-white"
+    >
+      <span>Premium Tech. Smarter Prices. — Shop Refurbished Laptops at Pickora</span>
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        className="shrink-0 transition-transform duration-300 ease-[var(--ease-glass)] group-hover:translate-x-0.5"
+      >
+        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </Link>
   );
 }
