@@ -41,6 +41,7 @@
   --color-glass-light: #f4f4f5;
   --color-glass-muted: #71717a;
   --color-glass-emerald: #34d399;
+  --color-glass-violet: #7c5cf6;
   --glass-surface: rgba(255, 255, 255, 0.05);
   --glass-surface-strong: rgba(255, 255, 255, 0.09);
   --glass-border: rgba(255, 255, 255, 0.1);
@@ -67,6 +68,7 @@
   --color-glass-light: var(--color-glass-light);
   --color-glass-muted: var(--color-glass-muted);
   --color-glass-emerald: var(--color-glass-emerald);
+  --color-glass-violet: var(--color-glass-violet);
   --font-sans: var(--font-sora);
   --font-body: var(--font-inter);
   --radius-card: var(--radius-card);

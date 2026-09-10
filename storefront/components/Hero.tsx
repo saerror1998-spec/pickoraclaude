@@ -1,112 +1,93 @@
-import Image from "next/image";
 import Link from "next/link";
 import { WaveReveal } from "./WaveReveal";
-import { formatPrice, getSavePercent } from "@/lib/products";
-import type { Product } from "@/lib/types";
 
 /**
- * Luxury split hero: real copy + CTAs on the left, a real featured product
- * photo on the right in a tilted, layered card — not a generic app/SaaS
- * dashboard mockup (which is what this was adapted from). Falls back to a
- * plain badge card when no product is available (e.g. the product-load
- * error path), rather than showing a broken image.
+ * Immersive dark glass hero. No hardcoded commercial claims — the two stat
+ * cards on the right use `productCount`/`brandCount`, computed by the caller
+ * from the real Supabase catalog, rather than fixed numbers.
  */
-export function Hero({ product }: { product?: Product }) {
-  const savePercent = product ? getSavePercent(product) : null;
-
+export function Hero({ productCount, brandCount }: { productCount?: number; brandCount?: number }) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-cream to-cream-warm">
-      <div className="mx-auto flex max-w-[1400px] flex-col-reverse items-center gap-16 px-[var(--gutter-mobile)] py-20 md:px-[var(--gutter-desktop)] md:py-28 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:px-16 xl:px-24">
-        {/* Copy */}
-        <div className="max-w-xl text-center lg:text-left">
-          <p className="text-sm uppercase tracking-[0.2em] text-taupe-light">Certified refurbished</p>
+    <section className="px-3 pt-3 md:px-5">
+      <div className="relative isolate flex min-h-[85vh] flex-col justify-center overflow-hidden rounded-[var(--radius-section-mobile)] bg-gradient-to-b from-zinc-950 via-black to-black md:min-h-[92vh] md:rounded-[var(--radius-section)]">
+        {/* Ambient violet glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-[60%] w-[80%] -translate-x-1/2 rounded-full bg-glass-violet/20 blur-[120px]"
+        />
+        <div aria-hidden className="grain-overlay" />
 
-          <h1 className="mt-4 text-[clamp(2.25rem,5vw,4rem)] leading-[1.05] text-ink">
-            <WaveReveal as="span" className="block" text="Ask more of" direction="up" />
-            <WaveReveal as="span" className="block" text="your laptop." direction="up" delay={250} />
-          </h1>
+        {/* Decorative background wordmark — purely visual, hidden from a11y tree */}
+        <p
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-center font-bold leading-none text-white/[0.03] blur-[2px]"
+          style={{ fontSize: "18vw", letterSpacing: "-0.03em" }}
+        >
+          PICKORA
+        </p>
 
-          <p className="mt-6 text-balance text-[clamp(1rem,1.5vw,1.25rem)] text-taupe">
-            Premium laptops, professionally inspected, restored, and warrantied — at up to 40%
-            off retail.
-          </p>
+        <div className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 items-center gap-12 px-6 py-24 md:px-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-16 lg:px-16">
+          {/* Left: editorial copy */}
+          <div className="animate-fade-in-up text-center lg:text-left">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">
+              Premium Refurbished Tech
+            </p>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-            <Link
-              href="/shop"
-              className="rounded-[var(--radius-pill)] bg-ink px-8 py-3 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-105"
-            >
-              Explore Laptops
-            </Link>
-            <Link
-              href="/warranty"
-              className="rounded-[var(--radius-pill)] border border-ink/15 px-8 py-3 text-sm font-medium text-ink transition-colors duration-200 ease-[var(--ease-expo-out)] hover:bg-ink/5"
-            >
-              Learn about our warranty
-            </Link>
-          </div>
-        </div>
+            <h1 className="mt-5 text-[clamp(2.5rem,6vw,4.75rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
+              <WaveReveal as="span" className="block" text="Smarter laptops." direction="up" />
+              <WaveReveal as="span" className="block" text="Better value." direction="up" delay={250} />
+            </h1>
 
-        {/* Product showcase */}
-        <div className="relative mx-auto w-full max-w-sm shrink-0 lg:mx-0">
-          {/* Stacked layers behind the card, for depth — Pickora's own tones. */}
-          <div aria-hidden className="absolute -left-4 -top-4 h-full w-full rotate-6 rounded-[var(--radius-card)] bg-ink/10" />
-          <div aria-hidden className="absolute -left-8 -top-8 h-full w-full rotate-12 rounded-[var(--radius-card)] bg-accent/10" />
+            <p className="mx-auto mt-6 max-w-md text-balance text-base font-light text-zinc-400 lg:mx-0">
+              Discover carefully selected refurbished Dell, HP and Lenovo laptops with configurations for
+              work, study and everyday use.
+            </p>
 
-          {product ? (
-            <Link
-              href={`/products/${product.slug}`}
-              className="group relative block rotate-2 rounded-[var(--radius-card)] bg-white p-5 shadow-[var(--shadow-deep)] transition-transform duration-300 hover:rotate-1"
-            >
-              <div className="relative aspect-square overflow-hidden rounded-[var(--radius-card-secondary)] bg-cream-warm">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="(min-width: 1024px) 384px, 80vw"
-                  className="object-cover transition-transform duration-300 ease-[var(--ease-expo-out)] group-hover:scale-105"
-                  priority
-                />
-                {savePercent !== null && (
-                  <span className="absolute left-3 top-3 rounded-[var(--radius-pill)] bg-[var(--color-save)] px-3 py-1 text-xs font-medium text-white">
-                    Save {savePercent}%
-                  </span>
-                )}
-              </div>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+              <Link
+                href="/shop"
+                className="group flex items-center gap-3 rounded-full bg-white py-2 pl-6 pr-2 text-sm font-medium text-zinc-900 transition-transform duration-300 ease-[var(--ease-glass)] hover:scale-105"
+              >
+                Shop Laptops
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-white transition-colors duration-300 group-hover:bg-zinc-700">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M5 12h14M13 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </Link>
 
-              <div className="mt-4">
-                <p className="text-xs uppercase tracking-[0.1em] text-taupe-light">{product.brand}</p>
-                <p className="mt-1 truncate text-base text-ink">{product.name}</p>
-                <div className="mt-1 flex items-center gap-2 tabular-nums">
-                  <span className="text-lg text-ink">{formatPrice(product.priceCents)}</span>
-                  {product.originalPriceCents && (
-                    <span className="text-sm text-taupe-light line-through">
-                      {formatPrice(product.originalPriceCents)}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </Link>
-          ) : (
-            <div className="relative flex aspect-square rotate-2 items-center justify-center rounded-[var(--radius-card)] bg-white p-5 shadow-[var(--shadow-deep)]">
-              <p className="text-taupe">Certified refurbished laptops</p>
+              <Link
+                href="/shop"
+                className="glass-panel rounded-full px-6 py-3 text-sm font-medium text-white/80 transition-colors duration-300 hover:text-white"
+              >
+                Explore Dell, HP &amp; Lenovo
+              </Link>
             </div>
-          )}
+          </div>
 
-          {/* Floating badge — real claim, not a fabricated app-mockup element. */}
-          <div className="absolute -bottom-6 -right-4 flex items-center gap-3 rounded-[var(--radius-card-secondary)] bg-ink px-5 py-4 shadow-[var(--shadow-deep)] md:-right-8">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0 text-white">
-              <path
-                d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3Z M9 12l2 2 4-4"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <div>
-              <p className="text-sm font-medium text-white">Certified refurbished</p>
-              <p className="text-xs text-white/60">90-day warranty included</p>
+          {/* Right: floating glass stat cards */}
+          <div className="mx-auto flex w-full max-w-xs flex-col gap-4 lg:mx-0">
+            {typeof productCount === "number" && (
+              <div className="glass-panel animate-fade-in-up rounded-3xl p-5" style={{ animationDelay: "150ms" }}>
+                <p className="text-3xl font-medium tracking-[-0.03em] text-white">{productCount}+</p>
+                <p className="mt-1 text-sm text-white/60">Laptops available</p>
+              </div>
+            )}
+            {typeof brandCount === "number" && brandCount > 0 && (
+              <div className="glass-panel animate-fade-in-up rounded-3xl p-5" style={{ animationDelay: "300ms" }}>
+                <p className="text-3xl font-medium tracking-[-0.03em] text-white">Dell · HP · Lenovo</p>
+                <p className="mt-1 text-sm text-white/60">Available brands</p>
+              </div>
+            )}
+            <div className="glass-panel animate-fade-in-up rounded-3xl p-5" style={{ animationDelay: "450ms" }}>
+              <p className="text-3xl font-medium tracking-[-0.03em] text-white">AED</p>
+              <p className="mt-1 text-sm text-white/60">Transparent pricing</p>
             </div>
           </div>
         </div>

@@ -87,72 +87,72 @@ const COMPARE_ROWS = [
 
 export function WhyPickora() {
   return (
-    <section
-      id="why-pickora"
-      className="mx-auto max-w-[1400px] px-[var(--gutter-mobile)] py-20 md:px-[var(--gutter-desktop)]"
-    >
-      <ScrollReveal
-        as="h2"
-        lines={["Why buy refurbished", "on Pickora."]}
-        className="type-headline-md text-center"
-      />
-      <p className="mx-auto mt-4 max-w-lg text-balance text-center text-taupe">
-        Every laptop is inspected, restored, and backed by a real warranty — so &ldquo;refurbished&rdquo;
-        means dependable, not risky.
-      </p>
-
-      <div className="mt-12 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 md:gap-[var(--gutter-desktop)] lg:grid-cols-4">
-        {REASONS.map((reason) => (
-          <div
-            key={reason.title}
-            className="rounded-[var(--radius-card-secondary)] bg-white p-6 text-center shadow-[var(--shadow-soft)]"
-          >
-            <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-cream-warm text-ink">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                {reason.icon}
-              </svg>
-            </div>
-            <h3 className="mt-4 text-base text-ink">{reason.title}</h3>
-            <p className="mt-2 text-sm text-taupe">{reason.copy}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-20">
-        <h3 className="type-label-md text-center text-ink">
-          Our certification process
-        </h3>
-        <p className="mx-auto mt-3 max-w-lg text-balance text-center text-taupe">
-          The same four steps, on every single laptop, before it&apos;s allowed on the shelf.
+    <section id="why-pickora" className="bg-glass-light px-3 py-20 md:px-5">
+      <div className="mx-auto max-w-[1400px]">
+        <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-glass-muted">
+          Built for smarter laptop shopping
+        </p>
+        <ScrollReveal
+          as="h2"
+          lines={["Why buy refurbished", "on Pickora."]}
+          className="mt-3 text-center text-[clamp(2rem,4vw,3rem)] font-medium leading-[1.05] tracking-[-0.03em] text-glass-zinc"
+        />
+        <p className="mx-auto mt-4 max-w-lg text-balance text-center text-glass-muted">
+          Every laptop is inspected, restored, and backed by a real warranty — so &ldquo;refurbished&rdquo;
+          means dependable, not risky.
         </p>
 
-        <ol className="mt-10 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 md:gap-[var(--gutter-desktop)] lg:grid-cols-4">
-          {PROCESS_STEPS.map((item) => (
-            <li
-              key={item.step}
-              className="rounded-[var(--radius-card-secondary)] bg-cream-warm p-6 shadow-[var(--shadow-soft)]"
+        <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {REASONS.map((reason) => (
+            <div
+              key={reason.title}
+              className="rounded-2xl border border-black/5 bg-white p-6 text-center shadow-[var(--shadow-soft)] transition-transform duration-300 ease-[var(--ease-glass)] hover:-translate-y-1"
             >
-              <span className="text-sm text-taupe-light">{item.step}</span>
-              <h4 className="mt-2 text-base text-ink">{item.title}</h4>
-              <p className="mt-2 text-sm text-taupe">{item.copy}</p>
-            </li>
+              <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-glass-light text-glass-zinc">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  {reason.icon}
+                </svg>
+              </div>
+              <h3 className="mt-4 text-base text-glass-zinc">{reason.title}</h3>
+              <p className="mt-2 text-sm text-glass-muted">{reason.copy}</p>
+            </div>
           ))}
-        </ol>
-      </div>
-
-      <div className="mt-20 overflow-hidden rounded-[var(--radius-card)] bg-ink text-white shadow-[var(--shadow-deep)]">
-        <div className="grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-3">
-          <div className="bg-ink p-6 text-sm text-white/60 sm:col-span-1">Refurbished vs. brand new</div>
-          <div className="bg-ink p-6 text-sm font-medium text-white sm:col-span-1">Pickora refurbished</div>
-          <div className="bg-ink p-6 text-sm font-medium text-white/70 sm:col-span-1">Buying new</div>
         </div>
-        {COMPARE_ROWS.map((row) => (
-          <div key={row.label} className="grid grid-cols-1 gap-px border-t border-white/10 sm:grid-cols-3">
-            <div className="p-6 text-sm text-white/60 sm:col-span-1">{row.label}</div>
-            <div className="p-6 text-sm text-white sm:col-span-1">{row.refurbished}</div>
-            <div className="p-6 text-sm text-white/50 sm:col-span-1">{row.brandNew}</div>
+
+        <div className="mt-20">
+          <h3 className="text-center text-[clamp(1.5rem,3vw,2rem)] font-medium tracking-[-0.02em] text-glass-zinc">
+            Our certification process
+          </h3>
+          <p className="mx-auto mt-3 max-w-lg text-balance text-center text-glass-muted">
+            The same four steps, on every single laptop, before it&apos;s allowed on the shelf.
+          </p>
+
+          <ol className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {PROCESS_STEPS.map((item) => (
+              <li key={item.step} className="rounded-2xl border border-black/5 bg-white p-6 shadow-[var(--shadow-soft)]">
+                <span className="text-sm text-glass-muted">{item.step}</span>
+                <h4 className="mt-2 text-base text-glass-zinc">{item.title}</h4>
+                <p className="mt-2 text-sm text-glass-muted">{item.copy}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="relative mt-20 overflow-hidden rounded-[var(--radius-section-mobile)] bg-glass-dark text-white shadow-[var(--shadow-deep)] md:rounded-[var(--radius-section)]">
+          <div aria-hidden className="grain-overlay" />
+          <div className="relative grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-3">
+            <div className="bg-glass-dark p-6 text-sm text-white/60 sm:col-span-1">Refurbished vs. brand new</div>
+            <div className="bg-glass-dark p-6 text-sm font-medium text-white sm:col-span-1">Pickora refurbished</div>
+            <div className="bg-glass-dark p-6 text-sm font-medium text-white/70 sm:col-span-1">Buying new</div>
           </div>
-        ))}
+          {COMPARE_ROWS.map((row) => (
+            <div key={row.label} className="relative grid grid-cols-1 gap-px border-t border-white/10 sm:grid-cols-3">
+              <div className="p-6 text-sm text-white/60 sm:col-span-1">{row.label}</div>
+              <div className="p-6 text-sm text-white sm:col-span-1">{row.refurbished}</div>
+              <div className="p-6 text-sm text-white/50 sm:col-span-1">{row.brandNew}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
