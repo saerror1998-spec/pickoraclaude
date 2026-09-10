@@ -22,6 +22,7 @@ describe("sitemap", () => {
     expect(urls).toContain("https://store.pickoraonline.com");
     expect(urls).toContain("https://store.pickoraonline.com/shop");
     expect(urls).toContain("https://store.pickoraonline.com/blog");
+    expect(urls).toContain("https://store.pickoraonline.com/laptops-under-500-aed");
     for (const product of SAMPLE_PRODUCTS) {
       expect(urls).toContain(`https://store.pickoraonline.com/products/${product.slug}`);
     }

@@ -4,7 +4,7 @@ import { BLOG_POSTS } from "@/lib/blog-posts";
 
 const SITE_URL = "https://store.pickoraonline.com";
 
-const STATIC_ROUTES = ["", "/shop", "/warranty", "/support", "/blog"];
+const STATIC_ROUTES = ["", "/shop", "/warranty", "/support", "/blog", "/laptops-under-500-aed"];
 
 /** Real sitemap: every static route, every blog post, plus every real product slug from Supabase. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
