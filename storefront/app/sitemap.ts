@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { fetchProducts } from "@/lib/products";
 import { BLOG_POSTS } from "@/lib/blog-posts";
+import { brandSlug } from "@/lib/brand-meta";
 
 const SITE_URL = "https://store.pickoraonline.com";
 
@@ -19,10 +20,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   let productEntries: MetadataRoute.Sitemap = [];
+  let brandEntries: MetadataRoute.Sitemap = [];
   try {
     const products = await fetchProducts();
     productEntries = products.map((product) => ({
       url: `${SITE_URL}/products/${product.slug}`,
+      lastModified: new Date(),
+    }));
+
+    const realBrandSlugs = new Set(products.map((p) => brandSlug(p.brand)));
+    brandEntries = Array.from(realBrandSlugs).map((slug) => ({
+      url: `${SITE_URL}/brands/${slug}`,
       lastModified: new Date(),
     }));
   } catch {
@@ -31,5 +39,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // the product URLs.
   }
 
-  return [...staticEntries, ...blogEntries, ...productEntries];
+  return [...staticEntries, ...blogEntries, ...brandEntries, ...productEntries];
 }

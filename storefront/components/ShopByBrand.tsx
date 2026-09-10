@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { brandSlug } from "@/lib/brand-meta";
 import type { Product } from "@/lib/types";
 
 const MAX_BRANDS = 8;
@@ -41,7 +42,7 @@ export function ShopByBrand({ products }: { products: Product[] }) {
           return (
             <Link
               key={brand}
-              href={`/shop?brand=${encodeURIComponent(brand)}`}
+              href={`/brands/${brandSlug(brand)}`}
               className={`group flex items-center gap-6 overflow-hidden rounded-[var(--radius-card)] p-6 shadow-[var(--shadow-soft)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-1 sm:p-8 ${
                 dark ? "bg-ink text-white" : "bg-white text-ink"
               }`}

@@ -31,6 +31,6 @@ describe("ShopByBrand", () => {
     const products: Product[] = [{ ...base, id: "1", brand: "Dell" }];
     render(<ShopByBrand products={products} />);
 
-    expect(screen.getByRole("link", { name: /Dell/ })).toHaveAttribute("href", "/shop?brand=Dell");
+    expect(screen.getByRole("link", { name: /Dell/ })).toHaveAttribute("href", "/brands/dell");
   });
 });
