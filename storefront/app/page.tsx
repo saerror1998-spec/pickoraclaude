@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { HomepageBuyersGuide } from "@/components/HomepageBuyersGuide";
 import { BestOffers } from "@/components/BestOffers";
 import { ShopByBrand } from "@/components/ShopByBrand";
 import { BestLaptops } from "@/components/BestLaptops";
@@ -53,6 +54,7 @@ export default async function HomePage() {
       <Header />
       <main className="flex-1">
         <Hero product={pickHeroProduct(products)} />
+        <HomepageBuyersGuide products={products} />
         <BestOffers products={products} />
         <ShopByBrand products={products} />
         <BestLaptops products={products} />
