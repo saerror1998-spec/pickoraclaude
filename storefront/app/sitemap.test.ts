@@ -20,20 +20,20 @@ describe("sitemap", () => {
     const entries = await sitemap();
     const urls = entries.map((e) => e.url);
 
-    expect(urls).toContain("https://store.pickoraonline.com");
-    expect(urls).toContain("https://store.pickoraonline.com/shop");
-    expect(urls).toContain("https://store.pickoraonline.com/blog");
-    expect(urls).toContain("https://store.pickoraonline.com/laptops-under-500-aed");
-    expect(urls).toContain("https://store.pickoraonline.com/delivery");
-    expect(urls).toContain("https://store.pickoraonline.com/certification");
+    expect(urls).toContain("https://pickoraonline.com");
+    expect(urls).toContain("https://pickoraonline.com/shop");
+    expect(urls).toContain("https://pickoraonline.com/blog");
+    expect(urls).toContain("https://pickoraonline.com/laptops-under-500-aed");
+    expect(urls).toContain("https://pickoraonline.com/delivery");
+    expect(urls).toContain("https://pickoraonline.com/certification");
     for (const brand of new Set(SAMPLE_PRODUCTS.map((p) => brandSlug(p.brand)))) {
-      expect(urls).toContain(`https://store.pickoraonline.com/brands/${brand}`);
+      expect(urls).toContain(`https://pickoraonline.com/brands/${brand}`);
     }
     for (const product of SAMPLE_PRODUCTS) {
-      expect(urls).toContain(`https://store.pickoraonline.com/products/${product.slug}`);
+      expect(urls).toContain(`https://pickoraonline.com/products/${product.slug}`);
     }
     for (const post of BLOG_POSTS) {
-      expect(urls).toContain(`https://store.pickoraonline.com/blog/${post.slug}`);
+      expect(urls).toContain(`https://pickoraonline.com/blog/${post.slug}`);
     }
   });
 
@@ -42,6 +42,6 @@ describe("sitemap", () => {
     const { default: sitemap } = await import("./sitemap");
 
     const entries = await sitemap();
-    expect(entries.map((e) => e.url)).toContain("https://store.pickoraonline.com");
+    expect(entries.map((e) => e.url)).toContain("https://pickoraonline.com");
   });
 });

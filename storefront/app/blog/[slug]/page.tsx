@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 import { getBlogPost, BLOG_POSTS } from "@/lib/blog-posts";
 
-const SITE_URL = "https://store.pickoraonline.com";
+const SITE_URL = "https://pickoraonline.com";
 
 export function generateStaticParams() {
   return BLOG_POSTS.map((post) => ({ slug: post.slug }));

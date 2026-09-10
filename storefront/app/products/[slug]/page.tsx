@@ -47,7 +47,7 @@ function productJsonLd(product: Product) {
       priceCurrency: process.env.NEXT_PUBLIC_STORE_CURRENCY ?? "USD",
       price: (product.priceCents / 100).toFixed(2),
       availability: product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      url: `https://store.pickoraonline.com/products/${product.slug}`,
+      url: `https://pickoraonline.com/products/${product.slug}`,
     },
     itemCondition: "https://schema.org/RefurbishedCondition",
   };

@@ -10,7 +10,7 @@ const RESOURCES: ResourceLink[] = [
   {
     name: "Storefront (live)",
     description: "The customer-facing site.",
-    href: "https://store.pickoraonline.com",
+    href: "https://pickoraonline.com",
   },
   {
     name: "Admin (live)",

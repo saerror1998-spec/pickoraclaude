@@ -3,7 +3,7 @@ import { fetchProducts } from "@/lib/products";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { brandSlug } from "@/lib/brand-meta";
 
-const SITE_URL = "https://store.pickoraonline.com";
+const SITE_URL = "https://pickoraonline.com";
 
 const STATIC_ROUTES = [
   "",

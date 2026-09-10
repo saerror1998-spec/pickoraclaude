@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://store.pickoraonline.com";
+const SITE_URL = "https://pickoraonline.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {

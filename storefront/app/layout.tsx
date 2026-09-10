@@ -21,7 +21,7 @@ const inter = Inter({
   weight: "400",
 });
 
-const SITE_URL = "https://store.pickoraonline.com";
+const SITE_URL = "https://pickoraonline.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
