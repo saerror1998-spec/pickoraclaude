@@ -63,7 +63,7 @@ export function Testimonials() {
         {TESTIMONIALS.map((t) => (
           <li
             key={t.name}
-            className="w-72 shrink-0 snap-start rounded-[var(--radius-card)] bg-cream-warm p-6 shadow-[var(--shadow-soft)] md:w-80"
+            className="w-72 shrink-0 snap-start rounded-2xl border border-black/5 bg-glass-light p-6 shadow-[var(--shadow-soft)] md:w-80"
           >
             <Stars />
             <span className="sr-only">5 out of 5 stars</span>
