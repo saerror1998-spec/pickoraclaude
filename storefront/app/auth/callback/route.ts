@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { resolvePublicOrigin } from "@/lib/request-origin";
 
 /**
  * Supabase redirects here after a customer completes Google sign-in, with a
@@ -10,18 +11,19 @@ import { createServerClient } from "@supabase/ssr";
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
   const next = request.nextUrl.searchParams.get("next") ?? "/";
+  const origin = resolvePublicOrigin(request);
 
   if (!code) {
-    return NextResponse.redirect(new URL("/?auth_error=missing_code", request.url));
+    return NextResponse.redirect(new URL("/?auth_error=missing_code", origin));
   }
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anonKey) {
-    return NextResponse.redirect(new URL("/?auth_error=not_configured", request.url));
+    return NextResponse.redirect(new URL("/?auth_error=not_configured", origin));
   }
 
-  const response = NextResponse.redirect(new URL(next, request.url));
+  const response = NextResponse.redirect(new URL(next, origin));
 
   const supabase = createServerClient(url, anonKey, {
     cookies: {
@@ -37,7 +39,7 @@ export async function GET(request: NextRequest) {
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
     console.error("Failed to exchange OAuth code for session", error.message);
-    return NextResponse.redirect(new URL("/?auth_error=exchange_failed", request.url));
+    return NextResponse.redirect(new URL("/?auth_error=exchange_failed", origin));
   }
 
   return response;

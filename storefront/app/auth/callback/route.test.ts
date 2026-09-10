@@ -10,10 +10,10 @@ vi.mock("@supabase/ssr", () => ({
 
 const { GET } = await import("./route");
 
-function makeRequest(searchParams: Record<string, string>) {
+function makeRequest(searchParams: Record<string, string>, headers?: Record<string, string>) {
   const url = new URL("http://localhost:3000/auth/callback");
   for (const [key, value] of Object.entries(searchParams)) url.searchParams.set(key, value);
-  return new NextRequest(url);
+  return new NextRequest(url, headers ? { headers } : undefined);
 }
 
 describe("GET /auth/callback", () => {
@@ -49,6 +49,17 @@ describe("GET /auth/callback", () => {
     const response = await GET(makeRequest({ code: "bad-code" }));
 
     expect(response.headers.get("location")).toContain("auth_error=exchange_failed");
+  });
+
+  it("redirects to the public host from X-Forwarded-Host, not the internal request URL — the real production bug this exists for", async () => {
+    const response = await GET(
+      makeRequest(
+        { code: "abc123", next: "/account" },
+        { "x-forwarded-host": "pickoraonline.com", "x-forwarded-proto": "https" }
+      )
+    );
+
+    expect(response.headers.get("location")).toBe("https://pickoraonline.com/account");
   });
 
   it("redirects to / with an error when Supabase isn't configured", async () => {

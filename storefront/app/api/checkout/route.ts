@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createNomodCheckoutSession, NomodCheckoutError, type CheckoutLineItem } from "@/lib/nomod";
 import { createPendingOrder } from "@/lib/orders";
+import { resolvePublicOrigin } from "@/lib/request-origin";
 
 type CheckoutRequestBody = {
   lineItems: CheckoutLineItem[];
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid or missing lineItems" }, { status: 400 });
   }
 
-  const origin = request.nextUrl.origin;
+  const origin = resolvePublicOrigin(request);
   const referenceId = `pickora-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
   // We control these URLs, so we embed our own reference — no need to guess
   // what query params Nomod's redirect might add (it has no documented
