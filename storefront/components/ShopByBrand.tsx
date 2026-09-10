@@ -1,31 +1,21 @@
-import Image from "next/image";
 import Link from "next/link";
-import { brandSlug } from "@/lib/brand-meta";
+import { brandMeta, brandSlug } from "@/lib/brand-meta";
 import type { Product } from "@/lib/types";
 
 const MAX_BRANDS = 8;
 
-type BrandTile = { brand: string; count: number; product: Product };
-
-/** Cheapest in-stock unit for the tile's product shot — falls back to the cheapest overall if none are in stock. */
-function pickRepresentativeProduct(products: Product[]): Product {
-  const inStock = products.filter((p) => p.inStock);
-  const pool = inStock.length > 0 ? inStock : products;
-  return [...pool].sort((a, b) => a.priceCents - b.priceCents)[0];
-}
+type BrandTile = { brand: string; count: number };
 
 export function ShopByBrand({ products }: { products: Product[] }) {
-  const byBrand = new Map<string, Product[]>();
+  const byBrand = new Map<string, number>();
   for (const product of products) {
-    const list = byBrand.get(product.brand);
-    if (list) list.push(product);
-    else byBrand.set(product.brand, [product]);
+    byBrand.set(product.brand, (byBrand.get(product.brand) ?? 0) + 1);
   }
 
   const brands: BrandTile[] = Array.from(byBrand.entries())
-    .sort((a, b) => b[1].length - a[1].length)
+    .sort((a, b) => b[1] - a[1])
     .slice(0, MAX_BRANDS)
-    .map(([brand, list]) => ({ brand, count: list.length, product: pickRepresentativeProduct(list) }));
+    .map(([brand, count]) => ({ brand, count }));
 
   if (brands.length === 0) return null;
 
@@ -40,44 +30,38 @@ export function ShopByBrand({ products }: { products: Product[] }) {
       </h2>
 
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {brands.map(({ brand, count, product }) => (
-          <Link
-            key={brand}
-            href={`/brands/${brandSlug(brand)}`}
-            className="group relative flex flex-col overflow-hidden rounded-3xl bg-white shadow-[var(--shadow-soft)] transition-transform duration-300 ease-[var(--ease-glass)] hover:-translate-y-1"
-          >
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-glass-light">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover transition-transform duration-300 ease-[var(--ease-glass)] group-hover:scale-105"
-              />
-              <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
-            </div>
-
-            <div className="flex items-center justify-between gap-4 p-6">
-              <div className="min-w-0">
-                <span className="block text-xl font-medium tracking-[-0.02em] text-glass-zinc">{brand}</span>
-                <span className="mt-1 block text-sm text-glass-muted">
-                  {count} laptop{count === 1 ? "" : "s"}
-                </span>
-              </div>
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-glass-zinc text-white transition-colors duration-300 group-hover:bg-glass-violet">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path
-                    d="M5 12h14M13 6l6 6-6 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+        {brands.map(({ brand, count }) => {
+          const { tagline } = brandMeta(brand);
+          return (
+            <Link
+              key={brand}
+              href={`/brands/${brandSlug(brand)}`}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-black/5 bg-white p-6 shadow-[var(--shadow-soft)] transition-colors duration-300 ease-[var(--ease-glass)] hover:bg-gradient-to-br hover:from-glass-violet/[0.06] hover:to-transparent"
+            >
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-medium tracking-[-0.02em] text-glass-zinc">{brand}</span>
+                  <span
+                    aria-hidden="true"
+                    className="h-1.5 w-1.5 rounded-full bg-glass-emerald opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   />
-                </svg>
+                </div>
+                <p className="mt-1 text-sm text-glass-muted">
+                  {tagline} · {count} laptop{count === 1 ? "" : "s"}
+                </p>
+              </div>
+
+              <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-glass-zinc transition-colors duration-300 group-hover:text-glass-violet">
+                View range
+                <span className="relative inline-block w-4 overflow-hidden">
+                  <span className="inline-block transition-transform duration-300 ease-[var(--ease-glass)] group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
               </span>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
