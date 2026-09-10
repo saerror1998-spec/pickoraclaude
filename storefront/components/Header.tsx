@@ -36,7 +36,7 @@ export function Header() {
           className={`mx-auto flex max-w-[1400px] items-center justify-between gap-4 rounded-[var(--radius-pill)] border px-3 py-2 backdrop-blur-xl transition-colors duration-300 md:px-4 md:py-2.5 ${
             scrolled
               ? "border-white/10 bg-glass-dark/80"
-              : "border-white/10 bg-glass-dark/50"
+              : "border-white/10 bg-glass-dark/70"
           }`}
         >
           <Link href="/" className="shrink-0" aria-label="Pickora home">

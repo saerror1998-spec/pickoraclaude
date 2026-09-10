@@ -4,6 +4,11 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   images: {
+    // Default is 60s, which was flagged by a PageSpeed Insights audit
+    // ("efficient cache lifetimes") — product photos essentially never
+    // change once uploaded, so cache the optimized output for 30 days
+    // instead of re-validating on almost every request.
+    minimumCacheTTL: 2592000,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       // Real product images live in Supabase Storage (see

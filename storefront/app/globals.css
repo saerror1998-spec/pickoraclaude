@@ -5,7 +5,11 @@
   --color-ink: #0b0b0c;
   --color-ink-soft: #1c1b1d;
   --color-taupe: #786c70;
-  --color-taupe-light: #a99ea1;
+  /* Darkened from the original #a99ea1 (2.6:1 contrast on white — fails
+     WCAG AA) to #7d7275 (4.63:1 — passes for normal text), flagged by a
+     PageSpeed Insights audit against every strikethrough price and muted
+     label using this token sitewide. */
+  --color-taupe-light: #7d7275;
   --color-cream: #faf7f5;
   --color-cream-warm: #f3ede9;
   --color-accent: #2b5cff;
