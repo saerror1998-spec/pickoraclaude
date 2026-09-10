@@ -15,7 +15,15 @@ export function ProductsTable({ products }: { products: AdminProduct[] }) {
 
   return (
     <Card className="overflow-x-auto p-0">
-      <table className="w-full min-w-[640px] text-left text-sm">
+      <table className="w-full min-w-[640px] table-fixed text-left text-sm">
+        <colgroup>
+          <col className="w-[36%]" />
+          <col className="w-[14%]" />
+          <col className="w-[14%]" />
+          <col className="w-[14%]" />
+          <col className="w-[12%]" />
+          <col className="w-[10%]" />
+        </colgroup>
         <thead>
           <tr className="border-b border-card-border text-text-faint">
             <th className="px-5 py-3 font-normal">Name</th>
@@ -32,15 +40,15 @@ export function ProductsTable({ products }: { products: AdminProduct[] }) {
           {products.map((product) => (
             <tr key={product.id} className="border-b border-card-border/60 last:border-0">
               <td className="px-5 py-3 text-text">
-                <div className="flex items-center gap-3">
+                <Link href={`/products/${product.id}/edit`} className="flex min-w-0 items-center gap-3 hover:underline">
                   <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-[var(--radius-card-sm)] bg-panel">
                     <Image src={product.image} alt={product.name} fill sizes="40px" className="object-cover" />
                   </div>
                   <span className="truncate">{product.name}</span>
-                </div>
+                </Link>
               </td>
-              <td className="px-5 py-3 text-text-muted">{product.brand}</td>
-              <td className="px-5 py-3 text-text-muted">{product.condition}</td>
+              <td className="truncate px-5 py-3 text-text-muted">{product.brand}</td>
+              <td className="truncate px-5 py-3 text-text-muted">{product.condition}</td>
               <td className="px-5 py-3 text-right tabular-nums text-text">{formatPrice(product.priceCents)}</td>
               <td className="px-5 py-3 text-right">
                 <span
