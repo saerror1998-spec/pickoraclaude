@@ -27,7 +27,8 @@ describe("BlogIndexPage", () => {
     renderBlogIndex();
 
     for (const post of BLOG_POSTS) {
-      const link = screen.getByRole("link", { name: new RegExp(post.title) });
+      const escapedTitle = post.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const link = screen.getByRole("link", { name: new RegExp(escapedTitle) });
       expect(link).toHaveAttribute("href", `/blog/${post.slug}`);
     }
   });

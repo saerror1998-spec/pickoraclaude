@@ -61,6 +61,35 @@ export const BLOG_POSTS: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "best-refurbished-business-laptops-uae",
+    title: "Best Refurbished Business Laptops in the UAE (2026)",
+    metaTitle: "Best Refurbished Business Laptops in the UAE | Pickora",
+    metaDescription:
+      "Comparing refurbished Dell Latitude, HP EliteBook and Lenovo ThinkPad for work in the UAE — pricing, specs, and which one to actually buy.",
+    publishedAt: "2026-09-10",
+    excerpt:
+      "Dell Latitude, HP EliteBook, or Lenovo ThinkPad — three of the most common refurbished business laptop lines in the UAE. Here's how they actually compare on our own catalog.",
+    sections: [
+      {
+        heading: "Dell Latitude vs. HP EliteBook vs. Lenovo ThinkPad — which fits your work?",
+        body: [
+          "All three are genuine business laptop lines built for daily office use, and all three show up regularly in our refurbished catalog with both i5 and i7 configurations available. The honest differences come down to price range and what condition units are currently in stock, more than any single \"best\" answer.",
+          "Dell Latitude has the deepest bench in our catalog — the widest range of models and configurations, spanning entry-level to higher-spec i7 units. If you want the most choice at a given budget, start here.",
+          "HP EliteBook covers a similar spread, with EliteBook models running from budget-friendly units up to higher-end touchscreen 2-in-1 configurations at the top of the range. Good if you specifically want a 2-in-1 or higher-spec business machine.",
+          "Lenovo ThinkPad is the smallest of the three lines in our catalog but tends to run cheaper at the entry end — ThinkPads have a reputation for build quality that holds up well even several generations in, which is exactly the kind of unit that makes sense to buy refurbished.",
+        ],
+      },
+      {
+        heading: "FAQ",
+        body: [
+          "Are i5 or i7 refurbished laptops better value? For general office work — documents, browsers, video calls — an i5 configuration is usually the better value; you're paying less for performance most business tasks won't fully use. An i7 makes sense if you're running heavier software (multiple VMs, large spreadsheets, light development work) where the extra headroom actually gets used.",
+          "Does the brand matter more than the condition grade? The condition grade (Excellent, Good, or Fair) shown on every product page tells you more about what you'll actually receive than the brand name does — a Good-condition unit from any of these three lines has been through the same 4-step certification and carries the same 90-day warranty.",
+          "Can I filter by brand to compare current stock? Yes — each brand (Dell, HP, Lenovo) has its own page on Pickora showing every current in-stock unit with real pricing, not a fixed list that goes stale.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
