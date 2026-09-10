@@ -1,6 +1,18 @@
+import { unstable_cache } from "next/cache";
 import { getSupabaseClient } from "./supabase/client";
 import { SAMPLE_PRODUCTS } from "./sample-data";
 import type { Product, ProductFilters, SortOption } from "./types";
+
+// Every dynamic page (/, /shop, /brands/[brand], /laptops-under-500-aed)
+// calls fetchProducts() and was re-fetching the full ~1200-row catalog from
+// Supabase — two paginated round trips — on every single request. Caching
+// this at the data layer (rather than making the pages themselves static,
+// which doesn't play well with /shop's searchParams-driven filtering) means
+// only one request per CACHE_SECONDS window actually hits Supabase; every
+// other request in that window is served from Next's data cache. Stock/price
+// can be up to CACHE_SECONDS stale — an ordinary, acceptable ecommerce
+// tradeoff for a large latency win.
+const CACHE_SECONDS = 60;
 
 type ProductRow = {
   id: string;
@@ -56,11 +68,11 @@ function mapRow(row: ProductRow): Product {
  * demoable; a configured-but-failing request still throws ProductFetchError
  * so callers can render a real error state instead of silently faking data.
  */
-export async function fetchProducts(): Promise<Product[]> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return SAMPLE_PRODUCTS;
+const getCachedProducts = unstable_cache(
+  async (): Promise<Product[]> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return SAMPLE_PRODUCTS;
 
-  try {
     // Supabase/PostgREST caps a single request at 1000 rows by default —
     // page through with .range() so a catalog past that size isn't silently
     // truncated (this happened: 1202 real products loaded as 1000).
@@ -82,6 +94,14 @@ export async function fetchProducts(): Promise<Product[]> {
     }
 
     return allRows.map(mapRow);
+  },
+  ["product-catalog"],
+  { revalidate: CACHE_SECONDS, tags: ["products"] }
+);
+
+export async function fetchProducts(): Promise<Product[]> {
+  try {
+    return await getCachedProducts();
   } catch (cause) {
     throw new ProductFetchError("Failed to load products from Supabase", cause);
   }
@@ -92,11 +112,11 @@ export async function fetchProducts(): Promise<Product[]> {
  * null when not found (including when Supabase isn't configured, unless the
  * slug matches a sample product, so the PDP stays demoable too).
  */
-export async function fetchProductBySlug(slug: string): Promise<Product | null> {
-  const supabase = getSupabaseClient();
-  if (!supabase) return SAMPLE_PRODUCTS.find((p) => p.slug === slug) ?? null;
+const getCachedProductBySlug = unstable_cache(
+  async (slug: string): Promise<Product | null> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return SAMPLE_PRODUCTS.find((p) => p.slug === slug) ?? null;
 
-  try {
     const { data, error } = await supabase
       .from("products")
       .select(PRODUCT_COLUMNS)
@@ -107,6 +127,14 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
     if (!data) return null;
 
     return mapRow(data as ProductRow);
+  },
+  ["product-by-slug"],
+  { revalidate: CACHE_SECONDS, tags: ["products"] }
+);
+
+export async function fetchProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    return await getCachedProductBySlug(slug);
   } catch (cause) {
     throw new ProductFetchError(`Failed to load product "${slug}" from Supabase`, cause);
   }
