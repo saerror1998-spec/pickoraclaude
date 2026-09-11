@@ -1,3 +1,16 @@
+// The order's `status` column is the *payment* status Nomod reports
+// (see storefront/lib/orders.ts) — these are the only real values that
+// mean anything to that pipeline, plus "refunded" for a manual after-the-
+// fact correction. Deliberately not adding invented fulfillment states
+// (e.g. "shipped") here — Pickora has no shipment-tracking data model yet.
+//
+// Lives in this plain module (not lib/actions/orders.ts) because that file
+// has a top-level "use server" directive: Next.js only allows async function
+// exports from "use server" files, and a client component importing a
+// non-function export from one gets a broken server-reference stub instead
+// of the real value.
+export const EDITABLE_ORDER_STATUSES = ["pending", "paid", "cancelled", "expired", "refunded"] as const;
+
 export type TrendDirection = "up" | "down" | "flat";
 
 export type StatSummary = {

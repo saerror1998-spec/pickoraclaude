@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useRef } from "react";
-import { updateOrderStatus, EDITABLE_ORDER_STATUSES, type OrderFormState } from "@/lib/actions/orders";
+import { updateOrderStatus, type OrderFormState } from "@/lib/actions/orders";
+import { EDITABLE_ORDER_STATUSES } from "@/lib/types";
 
 const STATUS_STYLES: Record<string, string> = {
   paid: "bg-positive/10 text-positive",

@@ -3,15 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin-server";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { EDITABLE_ORDER_STATUSES } from "@/lib/types";
 
 export type OrderFormState = { error: string | null };
-
-// The order's `status` column is the *payment* status Nomod reports
-// (see storefront/lib/orders.ts) — these are the only real values that
-// mean anything to that pipeline, plus "refunded" for a manual after-the-
-// fact correction. Deliberately not adding invented fulfillment states
-// (e.g. "shipped") here — Pickora has no shipment-tracking data model yet.
-export const EDITABLE_ORDER_STATUSES = ["pending", "paid", "cancelled", "expired", "refunded"] as const;
 
 async function requireAdminUser() {
   const supabase = await getSupabaseServerClient();
