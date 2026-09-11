@@ -8,6 +8,8 @@ import { ProductLoadError } from "@/components/ProductLoadError";
 import { AddToCartButton } from "@/components/AddToCartButton";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ProductInfoAccordion } from "@/components/ProductInfoAccordion";
+import { ProductSpecPills } from "@/components/ProductSpecPills";
+import { Testimonials } from "@/components/Testimonials";
 import { fetchProductBySlug, formatPrice, getSavePercent, ProductFetchError } from "@/lib/products";
 import type { Product } from "@/lib/types";
 
@@ -102,7 +104,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           </nav>
 
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
-            <div className="group relative aspect-square w-full overflow-hidden rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-soft)]">
+            <div className="group relative aspect-square w-full overflow-hidden rounded-[var(--radius-card)] bg-cream-warm shadow-[var(--shadow-soft)]">
               <Image
                 src={product.image}
                 alt={product.name}
@@ -133,11 +135,28 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 immediate
               />
 
-              <p className="mt-4 text-base text-taupe">
-                {product.specText || `${product.processor} · ${product.ramGb}GB · ${product.storageGb}GB`}
-              </p>
+              {/* Real condition + stock signal in the reference's "rating row"
+                  slot — no fabricated star rating, since no per-product
+                  review data exists. */}
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-ink/5 px-3 py-1 text-xs font-medium text-ink">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="m5 13 4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Certified {product.condition}
+                </span>
+                {product.inStock ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-[var(--color-save)]/10 px-3 py-1 text-xs font-medium text-[var(--color-save)]">
+                    In stock
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-pill)] bg-taupe-light/15 px-3 py-1 text-xs font-medium text-taupe">
+                    Sold out
+                  </span>
+                )}
+              </div>
 
-              <div className="mt-6 flex items-baseline gap-3 tabular-nums">
+              <div className="mt-4 flex items-baseline gap-3 tabular-nums">
                 <span className="text-3xl text-ink">{formatPrice(product.priceCents)}</span>
                 {product.originalPriceCents && (
                   <span className="text-lg text-taupe-light line-through">
@@ -146,18 +165,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 )}
               </div>
 
-              <p className="mt-2 text-sm text-taupe">
-                Condition:{" "}
-                <span className="text-ink">{product.condition}</span>
-                <span className="mx-2 text-taupe-light" aria-hidden>
-                  ·
-                </span>
-                {product.inStock ? (
-                  <span className="text-[var(--color-save)]">In stock</span>
-                ) : (
-                  <span className="text-taupe-light">Sold out</span>
-                )}
+              <p className="mt-4 text-base text-taupe">
+                {product.specText || `${product.processor} · ${product.ramGb}GB · ${product.storageGb}GB`}
               </p>
+
+              <ProductSpecPills product={product} />
 
               <div className="mt-8 max-w-sm">
                 {product.inStock ? (
@@ -196,6 +208,8 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
           <ProductInfoAccordion product={product} />
         </div>
+
+        <Testimonials />
       </main>
       <MobileDock />
     </>

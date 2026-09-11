@@ -41,26 +41,43 @@ export function AddToCartButton({ product }: { product: Omit<CartItem, "quantity
 
   return (
     <div className="flex flex-col gap-3">
-      <label className="flex items-center gap-3 text-sm text-taupe">
-        Quantity
-        <select
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          className="rounded-[var(--radius-pill)] border border-taupe-light/40 bg-white px-3 py-1.5 text-sm text-ink focus-visible:outline-none"
+      <div className="flex items-center gap-3 text-sm text-taupe">
+        <span id="quantity-label">Quantity</span>
+        <div
+          role="group"
+          aria-labelledby="quantity-label"
+          className="flex items-center gap-4 rounded-[var(--radius-pill)] border border-taupe-light/40 bg-white px-2 py-1.5"
         >
-          {Array.from({ length: 5 }, (_, i) => i + 1).map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
-      </label>
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            disabled={quantity <= 1}
+            aria-label="Decrease quantity"
+            className="flex h-6 w-6 items-center justify-center rounded-full text-base leading-none text-ink transition-colors hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            −
+          </button>
+          <span className="min-w-4 text-center text-sm font-medium tabular-nums text-ink">{quantity}</span>
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.min(5, q + 1))}
+            disabled={quantity >= 5}
+            aria-label="Increase quantity"
+            className="flex h-6 w-6 items-center justify-center rounded-full text-base leading-none text-ink transition-colors hover:bg-ink/5 disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            +
+          </button>
+        </div>
+      </div>
 
+      {/* Add to Cart is the primary, filled CTA — the one action most buyers
+          take — with Buy Now as a secondary outlined path straight to
+          checkout, rather than the reverse. */}
       <button
         type="button"
         onClick={handleAddToCart}
         disabled={loading || signingIn}
-        className="w-full rounded-[var(--radius-pill)] border border-ink px-8 py-3 text-sm font-medium text-ink transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-[var(--radius-pill)] bg-ink px-8 py-3.5 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {justAdded ? "Added to cart ✓" : !user && !loading ? "Sign in to add to cart" : "Add to Cart"}
       </button>
@@ -69,7 +86,7 @@ export function AddToCartButton({ product }: { product: Omit<CartItem, "quantity
         type="button"
         onClick={handleBuyNow}
         disabled={loading || signingIn}
-        className="w-full rounded-[var(--radius-pill)] bg-ink px-8 py-3 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+        className="w-full rounded-[var(--radius-pill)] border border-ink px-8 py-3.5 text-sm font-medium text-ink transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {!user && !loading ? "Sign in to buy now" : "Buy Now"}
       </button>

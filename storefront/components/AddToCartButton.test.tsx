@@ -119,10 +119,30 @@ describe("AddToCartButton", () => {
         </CartProvider>
       );
 
-      await user.selectOptions(screen.getByLabelText("Quantity"), "3");
+      await user.click(screen.getByRole("button", { name: "Increase quantity" }));
+      await user.click(screen.getByRole("button", { name: "Increase quantity" }));
+      expect(screen.getByText("3")).toBeInTheDocument();
+
       await user.click(screen.getByRole("button", { name: "Add to Cart" }));
 
       expect(await screen.findByText("Added to cart ✓")).toBeInTheDocument();
+    });
+
+    it("the quantity stepper can't go below 1 or above 5", async () => {
+      const user = userEvent.setup();
+      render(
+        <CartProvider>
+          <AddToCartButton product={product} />
+        </CartProvider>
+      );
+
+      expect(screen.getByRole("button", { name: "Decrease quantity" })).toBeDisabled();
+
+      for (let i = 0; i < 5; i++) {
+        await user.click(screen.getByRole("button", { name: "Increase quantity" }));
+      }
+      expect(screen.getByText("5")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Increase quantity" })).toBeDisabled();
     });
 
     it("Buy Now adds to cart and navigates to /cart", async () => {
