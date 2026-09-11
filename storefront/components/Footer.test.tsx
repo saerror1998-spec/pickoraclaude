@@ -39,6 +39,7 @@ describe("Footer", () => {
       "/laptops-under-500-aed",
       "/delivery",
       "/certification",
+      "/privacy-policy",
       "mailto:hello@pickoraonline.com",
       "https://wa.me/971524078652",
       "https://www.instagram.com/pickora.online",
@@ -58,6 +59,15 @@ describe("Footer", () => {
     expect(screen.getAllByRole("link", { name: "Your account" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Sign in" }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: /Email hello@pickoraonline\.com/ }).length).toBeGreaterThan(0);
+  });
+
+  it("links to the privacy policy from the copyright line, not a main nav column", () => {
+    render(<Footer />);
+    const privacyLinks = screen.getAllByRole("link", { name: "Privacy Policy" });
+    expect(privacyLinks.length).toBeGreaterThan(0);
+    for (const link of privacyLinks) {
+      expect(link).toHaveAttribute("href", "/privacy-policy");
+    }
   });
 
   it("shows the accepted payment methods", () => {

@@ -267,8 +267,11 @@ function CinematicFooter() {
         </div>
 
         <div className="relative z-20 flex w-full flex-col items-center justify-between gap-6 border-t border-white/10 px-[var(--gutter-desktop)] pb-8 pt-8 md:flex-row">
-          <p className="order-2 text-xs font-semibold uppercase tracking-widest text-white/40 md:order-1">
-            © {YEAR} Pickora. All rights reserved.
+          <p className="order-2 flex items-center gap-3 text-xs font-semibold uppercase tracking-widest text-white/40 md:order-1">
+            <span>© {YEAR} Pickora. All rights reserved.</span>
+            <Link href="/privacy-policy" className="normal-case tracking-normal text-white/40 underline underline-offset-2 hover:text-white/70">
+              Privacy Policy
+            </Link>
           </p>
 
           <p className="order-1 flex items-center gap-2 rounded-[var(--radius-pill)] border border-white/10 bg-white/[0.03] px-6 py-3 text-xs font-semibold uppercase tracking-widest text-white/50 md:order-2">
@@ -319,7 +322,12 @@ function SimpleFooter() {
           <PaymentBadges badgeClassName="border-white/10 bg-white/[0.03] text-white/60" />
         </div>
 
-        <p className="mt-8 text-xs text-white/40">© {YEAR} Pickora. All rights reserved.</p>
+        <p className="mt-8 flex flex-wrap items-center gap-3 text-xs text-white/40">
+          <span>© {YEAR} Pickora. All rights reserved.</span>
+          <Link href="/privacy-policy" className="underline underline-offset-2 hover:text-white/70">
+            Privacy Policy
+          </Link>
+        </p>
       </div>
     </footer>
   );
