@@ -5,8 +5,9 @@ import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductLoadError } from "@/components/ProductLoadError";
-import { fetchProducts, ProductFetchError } from "@/lib/products";
+import { fetchProducts, paginate, ProductFetchError } from "@/lib/products";
 import { brandMeta, brandSlug } from "@/lib/brand-meta";
+import { Pagination } from "@/components/Pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +37,10 @@ export async function generateMetadata({ params }: PageProps<"/brands/[brand]">)
   };
 }
 
-export default async function BrandPage({ params }: PageProps<"/brands/[brand]">) {
+export default async function BrandPage({ params, searchParams }: PageProps<"/brands/[brand]">) {
   const { brand: slug } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(Array.isArray(pageParam) ? pageParam[0] : pageParam) || 1);
 
   let products, realBrand;
   try {
@@ -63,6 +66,7 @@ export default async function BrandPage({ params }: PageProps<"/brands/[brand]">
   const { intro } = brandMeta(realBrand);
   const brandProducts = products.filter((p) => p.brand === realBrand);
   const inStockCount = brandProducts.filter((p) => p.inStock).length;
+  const { items: pageProducts, totalPages } = paginate(brandProducts, page);
 
   return (
     <>
@@ -90,11 +94,14 @@ export default async function BrandPage({ params }: PageProps<"/brands/[brand]">
               .
             </div>
           ) : (
-            <div className="mt-10 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-[var(--gutter-desktop)]">
-              {brandProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="mt-10 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-[var(--gutter-desktop)]">
+                {pageProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+              <Pagination page={page} totalPages={totalPages} buildHref={(p) => `/brands/${slug}?page=${p}`} />
+            </>
           )}
         </div>
       </main>

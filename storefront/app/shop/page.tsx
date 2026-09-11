@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { CatalogSection } from "@/components/CatalogSection";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductLoadError } from "@/components/ProductLoadError";
-import { fetchProducts, ProductFetchError } from "@/lib/products";
+import { fetchProducts, filterProducts, sortProducts, paginate, parseCatalogSearchParams, ProductFetchError } from "@/lib/products";
 import { brandMeta, brandSlug } from "@/lib/brand-meta";
 
 export async function generateMetadata({ searchParams }: PageProps<"/shop">): Promise<Metadata> {
@@ -35,12 +35,11 @@ export async function generateMetadata({ searchParams }: PageProps<"/shop">): Pr
 }
 
 export default async function ShopPage({ searchParams }: PageProps<"/shop">) {
-  const { brand } = await searchParams;
-  const initialBrand = typeof brand === "string" ? brand : null;
+  const resolvedSearchParams = await searchParams;
 
-  let products;
+  let catalog;
   try {
-    products = await fetchProducts();
+    catalog = await fetchProducts();
   } catch (error) {
     if (error instanceof ProductFetchError) {
       console.error(error.message, error.cause);
@@ -57,11 +56,24 @@ export default async function ShopPage({ searchParams }: PageProps<"/shop">) {
     throw error;
   }
 
+  const { filters, sort, page } = parseCatalogSearchParams(resolvedSearchParams);
+  const brands = Array.from(new Set(catalog.map((p) => p.brand))).sort((a, b) => a.localeCompare(b));
+  const filteredAndSorted = sortProducts(filterProducts(catalog, filters), sort);
+  const { items, totalPages, totalCount } = paginate(filteredAndSorted, page);
+
   return (
     <>
       <Header />
       <main className="flex-1">
-        <CatalogSection products={products} initialBrand={initialBrand} />
+        <CatalogSection
+          products={items}
+          brands={brands}
+          filters={filters}
+          sort={sort}
+          page={page}
+          totalPages={totalPages}
+          totalCount={totalCount}
+        />
       </main>
       <MobileDock />
     </>

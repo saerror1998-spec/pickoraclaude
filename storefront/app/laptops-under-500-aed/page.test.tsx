@@ -43,7 +43,7 @@ describe("LaptopsUnder500Page", () => {
     fetchProductsMock.mockResolvedValue(products);
     const { default: LaptopsUnder500Page } = await import("./page");
 
-    const element = await LaptopsUnder500Page();
+    const element = await LaptopsUnder500Page({ searchParams: Promise.resolve({}), params: Promise.resolve({}) });
     renderPage(element);
 
     expect(screen.getByText("Cheap Chromebook")).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe("LaptopsUnder500Page", () => {
     fetchProductsMock.mockResolvedValue([{ ...base, id: "1", priceCents: 99999, inStock: true }]);
     const { default: LaptopsUnder500Page } = await import("./page");
 
-    const element = await LaptopsUnder500Page();
+    const element = await LaptopsUnder500Page({ searchParams: Promise.resolve({}), params: Promise.resolve({}) });
     renderPage(element);
 
     expect(screen.getByText(/Nothing.s in stock under 500 AED right now/)).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("LaptopsUnder500Page", () => {
     fetchProductsMock.mockResolvedValue([{ ...base, id: "1", priceCents: 40000, inStock: true }]);
     const { default: LaptopsUnder500Page } = await import("./page");
 
-    const element = await LaptopsUnder500Page();
+    const element = await LaptopsUnder500Page({ searchParams: Promise.resolve({}), params: Promise.resolve({}) });
     const { container } = renderPage(element);
 
     const jsonLd = container.querySelector('script[type="application/ld+json"]');

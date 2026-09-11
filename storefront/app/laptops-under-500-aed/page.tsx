@@ -3,7 +3,8 @@ import { Header } from "@/components/Header";
 import { MobileDock } from "@/components/MobileDock";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductLoadError } from "@/components/ProductLoadError";
-import { fetchProducts, ProductFetchError } from "@/lib/products";
+import { fetchProducts, paginate, ProductFetchError } from "@/lib/products";
+import { Pagination } from "@/components/Pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,10 @@ const FAQ_JSON_LD = {
   ],
 };
 
-export default async function LaptopsUnder500Page() {
+export default async function LaptopsUnder500Page({ searchParams }: PageProps<"/laptops-under-500-aed">) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number(Array.isArray(pageParam) ? pageParam[0] : pageParam) || 1);
+
   let products;
   try {
     products = await fetchProducts();
@@ -58,6 +62,7 @@ export default async function LaptopsUnder500Page() {
   const budgetProducts = products.filter((p) => p.inStock && p.priceCents <= PRICE_CEILING_CENTS);
   const chromebookCount = budgetProducts.filter((p) => p.compatibility.includes("ChromeOS")).length;
   const windowsCount = budgetProducts.filter((p) => p.compatibility.includes("Windows")).length;
+  const { items: pageProducts, totalPages } = paginate(budgetProducts, page);
 
   return (
     <>
@@ -101,11 +106,14 @@ export default async function LaptopsUnder500Page() {
               for the next price tier up.
             </div>
           ) : (
-            <div className="mt-10 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 lg:grid-cols-3 md:gap-[var(--gutter-desktop)]">
-              {budgetProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="mt-10 grid grid-cols-1 gap-[var(--gutter-mobile)] sm:grid-cols-2 lg:grid-cols-3 md:gap-[var(--gutter-desktop)]">
+                {pageProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+              <Pagination page={page} totalPages={totalPages} buildHref={(p) => `/laptops-under-500-aed?page=${p}`} />
+            </>
           )}
 
           <div className="mt-14">

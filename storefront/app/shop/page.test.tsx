@@ -5,6 +5,11 @@ import { CartProvider } from "@/components/CartProvider";
 import { WishlistProvider } from "@/components/WishlistProvider";
 import { SAMPLE_PRODUCTS } from "@/lib/sample-data";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  usePathname: () => "/shop",
+}));
+
 const fetchProductsMock = vi.fn();
 vi.mock("@/lib/products", async () => {
   const actual = await vi.importActual<typeof import("@/lib/products")>("@/lib/products");
