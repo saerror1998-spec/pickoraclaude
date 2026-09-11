@@ -4,8 +4,9 @@ import userEvent from "@testing-library/user-event";
 import { LoginForm } from "./LoginForm";
 
 const signInWithGoogleMock = vi.fn();
+const signInWithPasswordMock = vi.fn();
 vi.mock("./AuthProvider", () => ({
-  useAuth: () => ({ signInWithGoogle: signInWithGoogleMock }),
+  useAuth: () => ({ signInWithGoogle: signInWithGoogleMock, signInWithPassword: signInWithPasswordMock }),
 }));
 
 let mockSearchParams = new URLSearchParams();
@@ -17,16 +18,26 @@ describe("LoginForm", () => {
   beforeEach(() => {
     signInWithGoogleMock.mockReset();
     signInWithGoogleMock.mockResolvedValue(undefined);
+    signInWithPasswordMock.mockReset();
+    signInWithPasswordMock.mockResolvedValue(undefined);
     mockSearchParams = new URLSearchParams();
   });
 
-  it("shows exactly one real sign-in method — no fake Apple/GitHub/email options", () => {
+  it("shows Google and real email/password sign-in — no fake Apple/GitHub options", () => {
     render(<LoginForm />);
 
     expect(screen.getByRole("button", { name: /Continue with Google/ })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/you@example.com/)).toBeInTheDocument();
     expect(screen.queryByText(/Apple/)).not.toBeInTheDocument();
     expect(screen.queryByText(/GitHub/)).not.toBeInTheDocument();
-    expect(screen.queryByPlaceholderText(/email/i)).not.toBeInTheDocument();
+  });
+
+  it("links to the signup page, preserving the ?next= redirect", () => {
+    mockSearchParams = new URLSearchParams({ next: "/products/thinkpad-x1" });
+    render(<LoginForm />);
+
+    const signUpLink = screen.getByRole("link", { name: /Sign up/ });
+    expect(signUpLink).toHaveAttribute("href", `/signup?next=${encodeURIComponent("/products/thinkpad-x1")}`);
   });
 
   it("signs in with Google, redirecting to /account by default", async () => {

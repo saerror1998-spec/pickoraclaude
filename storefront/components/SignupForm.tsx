@@ -6,11 +6,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { LoginBackgroundPaths } from "./LoginBackgroundPaths";
-import { EmailPasswordLoginForm } from "./EmailPasswordLoginForm";
+import { EmailSignupForm } from "./EmailSignupForm";
 
-// Same real claims used in WhyPickora/product page trust badges — not
-// invented for this page, and no fabricated customer testimonial in their
-// place (the reference design this was adapted from had one).
+// Same real claims used on the sign-in page — see LoginForm.tsx.
 const TRUST_CLAIMS = [
   { title: "90-day warranty", copy: "Every laptop is covered from the day it ships." },
   { title: "Free shipping", copy: "No surprises at checkout — free shipping, always." },
@@ -26,14 +24,14 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function LoginForm() {
+export function SignupForm() {
   const { signInWithGoogle } = useAuth();
   const searchParams = useSearchParams();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   const redirectPath = searchParams.get("next") ?? "/account";
 
-  async function handleSignIn() {
+  async function handleGoogleSignUp() {
     setBusy(true);
     setError(false);
     try {
@@ -46,7 +44,6 @@ export function LoginForm() {
 
   return (
     <main className="relative lg:grid lg:min-h-screen lg:grid-cols-2">
-      {/* Brand panel — desktop only */}
       <div className="relative hidden flex-col justify-between overflow-hidden bg-cream-warm p-10 lg:flex">
         <LoginBackgroundPaths position={1} />
 
@@ -64,7 +61,6 @@ export function LoginForm() {
         </div>
       </div>
 
-      {/* Sign-in panel */}
       <div className="relative flex min-h-screen flex-col justify-center bg-cream p-[var(--gutter-mobile)] md:p-[var(--gutter-desktop)]">
         <Link
           href="/"
@@ -82,15 +78,13 @@ export function LoginForm() {
           </Link>
 
           <div>
-            <h1 className="text-2xl text-ink">Sign in to Pickora</h1>
-            <p className="mt-1 text-base text-taupe">
-              Sign in to add to cart, track orders, and check out faster.
-            </p>
+            <h1 className="text-2xl text-ink">Create your account</h1>
+            <p className="mt-1 text-base text-taupe">Save your orders and check out faster next time.</p>
           </div>
 
           <button
             type="button"
-            onClick={handleSignIn}
+            onClick={handleGoogleSignUp}
             disabled={busy}
             className="flex w-full items-center justify-center gap-3 rounded-[var(--radius-pill)] bg-ink px-6 py-3.5 text-sm font-medium text-white transition-transform duration-200 ease-[var(--ease-expo-out)] hover:scale-[1.02] disabled:opacity-50"
           >
@@ -99,9 +93,7 @@ export function LoginForm() {
           </button>
 
           {error && (
-            <p className="text-sm text-red-600">
-              Something went wrong starting sign-in. Please try again.
-            </p>
+            <p className="text-sm text-red-600">Something went wrong starting sign-up. Please try again.</p>
           )}
 
           <div className="flex items-center gap-3">
@@ -110,15 +102,15 @@ export function LoginForm() {
             <span className="h-px flex-1 bg-ink/10" />
           </div>
 
-          <EmailPasswordLoginForm redirectPath={redirectPath} />
+          <EmailSignupForm redirectPath={redirectPath} />
 
           <p className="text-center text-sm text-taupe">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href={`/signup?next=${encodeURIComponent(redirectPath)}`}
+              href={`/login?next=${encodeURIComponent(redirectPath)}`}
               className="text-ink underline underline-offset-2 hover:no-underline"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
         </div>
