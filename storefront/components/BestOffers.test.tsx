@@ -1,17 +1,29 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BestOffers } from "./BestOffers";
 import { WishlistProvider } from "./WishlistProvider";
+import { CartProvider } from "./CartProvider";
 import { SAMPLE_PRODUCTS } from "@/lib/sample-data";
 import type { Product } from "@/lib/types";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  usePathname: () => "/",
+}));
+
+vi.mock("./AuthProvider", () => ({
+  useAuth: () => ({ user: null, loading: false, signInWithGoogle: vi.fn(), signOut: vi.fn() }),
+}));
 
 const base = SAMPLE_PRODUCTS[0];
 
 function renderOffers(products: Product[]) {
   return render(
-    <WishlistProvider>
-      <BestOffers products={products} />
-    </WishlistProvider>
+    <CartProvider>
+      <WishlistProvider>
+        <BestOffers products={products} />
+      </WishlistProvider>
+    </CartProvider>
   );
 }
 

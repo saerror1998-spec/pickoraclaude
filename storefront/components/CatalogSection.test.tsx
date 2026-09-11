@@ -1,10 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CatalogSection } from "./CatalogSection";
 import { WishlistProvider } from "./WishlistProvider";
+import { CartProvider } from "./CartProvider";
 import { SAMPLE_PRODUCTS } from "@/lib/sample-data";
 import type { Product } from "@/lib/types";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  usePathname: () => "/shop",
+}));
+
+vi.mock("./AuthProvider", () => ({
+  useAuth: () => ({ user: null, loading: false, signInWithGoogle: vi.fn(), signOut: vi.fn() }),
+}));
 
 const base = SAMPLE_PRODUCTS[0];
 const products: Product[] = [
@@ -14,9 +24,11 @@ const products: Product[] = [
 
 function renderCatalog(props: Parameters<typeof CatalogSection>[0]) {
   return render(
-    <WishlistProvider>
-      <CatalogSection {...props} />
-    </WishlistProvider>
+    <CartProvider>
+      <WishlistProvider>
+        <CatalogSection {...props} />
+      </WishlistProvider>
+    </CartProvider>
   );
 }
 

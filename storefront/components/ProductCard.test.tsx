@@ -1,16 +1,28 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ProductCard } from "./ProductCard";
 import { WishlistProvider } from "./WishlistProvider";
+import { CartProvider } from "./CartProvider";
 import { SAMPLE_PRODUCTS } from "@/lib/sample-data";
 import type { Product } from "@/lib/types";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  usePathname: () => "/shop",
+}));
+
+vi.mock("./AuthProvider", () => ({
+  useAuth: () => ({ user: null, loading: false, signInWithGoogle: vi.fn(), signOut: vi.fn() }),
+}));
+
 function renderCard(product: Product) {
   return render(
-    <WishlistProvider>
-      <ProductCard product={product} />
-    </WishlistProvider>
+    <CartProvider>
+      <WishlistProvider>
+        <ProductCard product={product} />
+      </WishlistProvider>
+    </CartProvider>
   );
 }
 
