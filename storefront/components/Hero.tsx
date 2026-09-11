@@ -7,8 +7,10 @@ import type { Product } from "@/lib/types";
 /**
  * Dark navy hero: giant low-opacity "PICKORA" wordmark as a decorative
  * background layer, a tilted ribbon badge, editorial copy + pill CTA on the
- * left, and a floating white deal card showing one real discounted product
- * (the biggest genuine discount in stock) on the right.
+ * left, and a floating white deal card on the right — name/price/brand are
+ * real data for the biggest genuine discount in stock, but the photo is a
+ * stock laptop mockup image rather than that product's real photo (a
+ * deliberate choice, not an oversight).
  */
 export function Hero({ product }: { product?: Product }) {
   const savePercent = product ? getSavePercent(product) : null;
@@ -85,7 +87,7 @@ export function Hero({ product }: { product?: Product }) {
             >
               <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-glass-light">
                 <Image
-                  src={product.image}
+                  src="/hero-macbook-mockup.jpg"
                   alt={product.name}
                   fill
                   sizes="320px"
