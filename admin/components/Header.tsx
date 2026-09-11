@@ -23,8 +23,8 @@ export async function Header() {
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-faint" />
           <input
             type="search"
-            placeholder="Search"
-            className="w-48 rounded-[var(--radius-pill)] border border-card-border bg-card py-2 pl-9 pr-4 text-sm text-text placeholder:text-text-faint focus-visible:outline-none"
+            placeholder="Search order or product…"
+            className="w-64 rounded-[var(--radius-pill)] border border-card-border bg-card py-2.5 pl-9 pr-4 text-sm text-text placeholder:text-text-faint focus-visible:outline-none"
           />
         </label>
 
@@ -39,7 +39,7 @@ export async function Header() {
 
         <Link
           href="/products/new"
-          className="rounded-[var(--radius-pill)] bg-text px-4 py-2 text-sm font-medium text-bg transition-transform duration-150 ease-[var(--ease-expo-out)] hover:scale-[1.03]"
+          className="rounded-[var(--radius-pill)] bg-accent px-4 py-2 text-sm font-medium text-white transition-transform duration-150 ease-[var(--ease-expo-out)] hover:scale-[1.03]"
         >
           + New Product
         </Link>

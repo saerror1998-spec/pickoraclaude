@@ -1,24 +1,31 @@
 @import "tailwindcss";
 
 /*
- * Pickora Admin is a deliberately dark-first surface (an operations tool,
- * not a themeable public page), so tokens are defined directly rather than
- * split across light/dark media blocks.
+ * Pickora Admin moved from a dark-first surface to a light violet-glass
+ * theme (2026 redesign) — soft gradient background, white glass cards with
+ * diffuse shadows instead of flat dark panels. Old dark tokens are kept
+ * commented below for reference/rollback; every token name is preserved so
+ * existing component classes (bg-card, text-text-muted, etc.) don't need
+ * touching page-by-page.
  */
 :root {
-  --color-bg: #0b0b0d;
-  --color-panel: #131316;
-  --color-panel-border: #232327;
-  --color-card: #17171b;
-  --color-card-border: #26262b;
-  --color-text: #ededf0;
-  --color-text-muted: #9a9aa3;
-  --color-text-faint: #6c6c74;
+  --color-bg: #eef0ff;
+  --color-panel: #ffffff;
+  --color-panel-border: #e4e6f7;
+  --color-card: #ffffff;
+  --color-card-border: #e9eafb;
+  --color-text: #16162a;
+  --color-text-muted: #6b6c85;
+  --color-text-faint: #9a9bb5;
 
-  --color-accent: #6d8bff;
-  --color-positive: #34c759;
-  --color-negative: #ff5c5c;
-  --color-warning: #f5a623;
+  --color-accent: #6c4cf5;
+  --color-accent-soft: #efeaff;
+  --color-positive: #1fa971;
+  --color-positive-soft: #e7f8f1;
+  --color-negative: #e5484d;
+  --color-negative-soft: #fdeceb;
+  --color-warning: #d9822b;
+  --color-warning-soft: #fdf2e3;
 
   --background: var(--color-bg);
   --foreground: var(--color-text);
@@ -29,7 +36,12 @@
 
   --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --shadow-card: 0 5px 24px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 8px 30px rgba(76, 60, 190, 0.08);
+  --shadow-card-lg: 0 20px 60px rgba(76, 60, 190, 0.14);
+
+  --gradient-page: radial-gradient(circle at 15% 0%, #d9d2ff 0%, transparent 45%),
+    radial-gradient(circle at 85% 15%, #c9e0ff 0%, transparent 40%),
+    linear-gradient(180deg, #e4e3ff 0%, #eef0ff 40%, #eef0ff 100%);
 }
 
 @theme inline {
@@ -44,9 +56,13 @@
   --color-text-muted: var(--color-text-muted);
   --color-text-faint: var(--color-text-faint);
   --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
   --color-positive: var(--color-positive);
+  --color-positive-soft: var(--color-positive-soft);
   --color-negative: var(--color-negative);
+  --color-negative-soft: var(--color-negative-soft);
   --color-warning: var(--color-warning);
+  --color-warning-soft: var(--color-warning-soft);
   --font-sans: var(--font-sora);
   --font-body: var(--font-inter);
   --radius-card: var(--radius-card);
@@ -55,10 +71,11 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--gradient-page);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 h1, h2, h3, h4 {
@@ -86,8 +103,31 @@ h1, h2, h3, h4 {
   border-radius: 4px;
 }
 
-/* Thin, unobtrusive scrollbar to match the dark chrome */
+/* Thin, unobtrusive scrollbar matching the light glass chrome */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-card-border) transparent;
+}
+
+/* Reusable glass-card surface: white panel, soft violet-tinted shadow,
+   subtle border — the base look for every card in the redesigned admin. */
+.glass-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+@keyframes count-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-count-in {
+  animation: count-fade-in 0.5s var(--ease-expo-out) both;
 }
