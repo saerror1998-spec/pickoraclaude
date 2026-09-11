@@ -6,6 +6,8 @@ import { CategoryTiles } from "@/components/CategoryTiles";
 import { PromoBanner } from "@/components/PromoBanner";
 import { PromoBand } from "@/components/PromoBand";
 import { BestLaptops } from "@/components/BestLaptops";
+import { CTABanner } from "@/components/CTABanner";
+import { MoreToExplore } from "@/components/MoreToExplore";
 import { WhyPickora } from "@/components/WhyPickora";
 import { Testimonials } from "@/components/Testimonials";
 import { MobileDock } from "@/components/MobileDock";
@@ -61,6 +63,8 @@ export default async function HomePage() {
         <PromoBanner products={products} />
         <PromoBand products={products} />
         <BestLaptops products={products} />
+        <CTABanner products={products} />
+        <MoreToExplore products={products} />
         <HomepageBuyersGuide products={products} />
         <WhyPickora />
         <Testimonials />
