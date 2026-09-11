@@ -91,6 +91,63 @@ describe("fetchDashboardOverview", () => {
 
     expect(overview.revenueByMonth).toHaveLength(6);
     expect(overview.revenueByMonth.reduce((sum, p) => sum + p.revenueCents, 0)).toBe(30000);
+
+    // 1 paid order in the last 30 days vs 1 prior -> flat.
+    expect(overview.stats.paidOrders30d.value).toBe("1");
+    expect(overview.stats.paidOrders30d.trend).toBe("flat");
+
+    // 1 pending order in the last 30 days, out of 2 orders total.
+    expect(overview.insights.pendingOrders.value).toBe(1);
+    expect(overview.insights.pendingOrders.total).toBe(2);
+    expect(overview.insights.cancelledOrders.value).toBe(0);
+    expect(overview.insights.refundedOrders.value).toBe(0);
+
+    // No products table data mocked here, so catalog composition is empty.
+    expect(overview.insights.outOfStockProducts).toEqual({
+      label: "Out of stock",
+      value: 0,
+      total: 1,
+      deltaLabel: "Live count",
+      trend: "flat",
+    });
+  });
+
+  it("computes newOrdersToday against yesterday, and detects genuinely new customers by first-ever order", async () => {
+    const HOUR_MS = 60 * 60 * 1000;
+    const iso = (hoursAgo: number) => new Date(Date.now() - hoursAgo * HOUR_MS).toISOString();
+
+    const orderRows = [
+      // Today: 2 new orders, one from a brand-new customer, one a repeat buyer.
+      { ...ORDER_ROW_A, id: "new-1", customer_email: "new@example.com", created_at: iso(2) },
+      { ...ORDER_ROW_A, id: "new-2", customer_email: "repeat@example.com", created_at: iso(5) },
+      // Yesterday: 1 order.
+      { ...ORDER_ROW_A, id: "yesterday-1", customer_email: "someone@example.com", created_at: iso(30) },
+      // 40 days ago: the repeat buyer's actual first order (outside the 30d window).
+      { ...ORDER_ROW_A, id: "old-1", customer_email: "repeat@example.com", created_at: iso(40 * 24) },
+    ];
+
+    getSupabaseAdminClientMock.mockReturnValue({
+      from: (table: string) => {
+        expect(table).toBe("orders");
+        return {
+          select: (_columns: string, opts?: { head?: boolean }) => {
+            if (opts?.head) return Promise.resolve({ error: null });
+            return { order: () => Promise.resolve({ data: orderRows, error: null }) };
+          },
+        };
+      },
+    });
+    const { fetchDashboardOverview } = await import("./admin-data");
+
+    const overview = await fetchDashboardOverview();
+
+    expect(overview.stats.newOrdersToday.value).toBe("2");
+    expect(overview.stats.newOrdersToday.trend).toBe("up");
+
+    // "new@example.com" and "someone@example.com" both have their first-ever
+    // order inside the last 30 days; "repeat@example.com"'s first order was
+    // 40 days ago, so it doesn't count even though it ordered again today.
+    expect(overview.insights.newCustomers30d.value).toBe(2);
   });
 });
 

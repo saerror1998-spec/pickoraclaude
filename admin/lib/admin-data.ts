@@ -11,6 +11,7 @@ import type {
   CatalogComposition,
   DailyPoint,
   DashboardOverview,
+  InsightMetric,
   IntegrationStatus,
   IntegrationStatusValue,
   MonthlyRevenuePoint,
@@ -54,6 +55,23 @@ function periodStat(
   const trend: TrendDirection = pctChange > 0.5 ? "up" : pctChange < -0.5 ? "down" : "flat";
   const sign = pctChange >= 0 ? "+" : "";
   return { label, value, deltaLabel: `${sign}${pctChange.toFixed(1)}% vs prior 30 days`, trend };
+}
+
+/** Builds an Insights & Performance card: a real count, a real denominator for its progress bar, and a period-over-period trend. */
+function periodInsight(label: string, current: number, previous: number, total: number): InsightMetric {
+  if (previous === 0) {
+    return {
+      label,
+      value: current,
+      total,
+      deltaLabel: current === 0 ? "None this month" : "No prior-period data",
+      trend: "flat",
+    };
+  }
+  const pctChange = ((current - previous) / previous) * 100;
+  const trend: TrendDirection = pctChange > 0.5 ? "up" : pctChange < -0.5 ? "down" : "flat";
+  const sign = pctChange >= 0 ? "+" : "";
+  return { label, value: current, total, deltaLabel: `${sign}${pctChange.toFixed(1)}% vs prior 30 days`, trend };
 }
 
 /**
@@ -128,15 +146,85 @@ export async function fetchDashboardOverview(): Promise<DashboardOverview> {
       };
     });
 
+    const last1Start = now - DAY_MS;
+    const prev1Start = now - 2 * DAY_MS;
+    const newOrdersToday = orders.filter((o) => new Date(o.createdAt).getTime() >= last1Start).length;
+    const newOrdersYesterday = orders.filter((o) => {
+      const t = new Date(o.createdAt).getTime();
+      return t >= prev1Start && t < last1Start;
+    }).length;
+
+    const byStatus = (status: string, pool: AdminOrder[]) => pool.filter((o) => o.status === status).length;
+
+    // "New customer" = an email whose earliest order (across all history, not
+    // just the last 30 days) falls in the window — a repeat buyer who happens
+    // to order again this month shouldn't count as "new".
+    const firstOrderByEmail = new Map<string, number>();
+    for (const order of orders) {
+      if (!order.customerEmail) continue;
+      const t = new Date(order.createdAt).getTime();
+      const existing = firstOrderByEmail.get(order.customerEmail);
+      if (existing === undefined || t < existing) firstOrderByEmail.set(order.customerEmail, t);
+    }
+    const firstOrderTimes = Array.from(firstOrderByEmail.values());
+    const newCustomersLast30 = firstOrderTimes.filter((t) => t >= last30Start).length;
+    const newCustomersPrev30 = firstOrderTimes.filter((t) => t >= prev30Start && t < last30Start).length;
+
+    const catalog = await fetchCatalogComposition();
+
     return {
       stats: {
         orders30d: periodStat("Orders (30d)", last30.length, prev30.length, (n) => n.toLocaleString("en-US")),
         revenue30d: periodStat("Revenue (30d)", last30Revenue, prev30Revenue, formatPrice),
         averageOrderValue30d: periodStat("Average order value", last30Aov, prev30Aov, formatPrice),
+        paidOrders30d: periodStat("Paid orders (30d)", last30Paid.length, prev30Paid.length, (n) =>
+          n.toLocaleString("en-US")
+        ),
+        newOrdersToday: periodStat("New orders (today)", newOrdersToday, newOrdersYesterday, (n) =>
+          n.toLocaleString("en-US")
+        ),
       },
       ordersTrend,
       revenueByMonth,
       totalOrdersLast30Days: last30.length,
+      insights: {
+        pendingOrders: periodInsight(
+          "Pending orders",
+          byStatus("pending", last30),
+          byStatus("pending", prev30),
+          last30.length || 1
+        ),
+        cancelledOrders: periodInsight(
+          "Cancelled orders",
+          byStatus("cancelled", last30),
+          byStatus("cancelled", prev30),
+          last30.length || 1
+        ),
+        refundedOrders: periodInsight(
+          "Refunded orders",
+          byStatus("refunded", last30),
+          byStatus("refunded", prev30),
+          last30.length || 1
+        ),
+        // No historical stock snapshot exists to compare against, so this is
+        // a live count rather than a period-over-period stat like the others
+        // — routing it through periodInsight would fabricate a "vs prior 30
+        // days" comparison for data that doesn't have one.
+        outOfStockProducts: {
+          label: "Out of stock",
+          value: catalog.soldOutCount,
+          total: catalog.totalProducts || 1,
+          deltaLabel: "Live count",
+          trend: "flat",
+        },
+        newCustomers30d: periodInsight(
+          "New customers",
+          newCustomersLast30,
+          newCustomersPrev30,
+          firstOrderTimes.length || 1
+        ),
+      },
+      recentOrders: orders.slice(0, 8),
     };
   } catch (cause) {
     throw new AdminDataError("Failed to load dashboard overview", cause);

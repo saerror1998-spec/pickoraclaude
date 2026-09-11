@@ -17,17 +17,38 @@ export type MonthlyRevenuePoint = {
   revenueCents: number;
 };
 
+/** One "Insights & Performance" card: a real count plus a real denominator so the UI can render an honest progress bar (value/total), not a decorative one. */
+export type InsightMetric = {
+  label: string;
+  value: number;
+  total: number;
+  deltaLabel: string;
+  trend: TrendDirection;
+};
+
 export type DashboardOverview = {
   stats: {
     orders30d: StatSummary;
     revenue30d: StatSummary;
     averageOrderValue30d: StatSummary;
+    paidOrders30d: StatSummary;
+    newOrdersToday: StatSummary;
   };
   /** Daily order counts (any status) for the last 30 days. */
   ordersTrend: DailyPoint[];
   /** Paid revenue for the last 6 calendar months, oldest first. */
   revenueByMonth: MonthlyRevenuePoint[];
   totalOrdersLast30Days: number;
+  /** Real order/catalog breakdowns for the Insights & Performance row. */
+  insights: {
+    pendingOrders: InsightMetric;
+    cancelledOrders: InsightMetric;
+    refundedOrders: InsightMetric;
+    outOfStockProducts: InsightMetric;
+    newCustomers30d: InsightMetric;
+  };
+  /** Most recent orders, newest first, for the Overview page's orders table. */
+  recentOrders: AdminOrder[];
 };
 
 export type AdminProduct = {
