@@ -10,6 +10,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 
 const YEAR = new Date().getFullYear();
 const SUPPORT_EMAIL = "hello@pickoraonline.com";
+const WHATSAPP_NUMBER = "971524078652"; // Same real number as WhatsAppButton.tsx.
 
 const FOOTER_COLUMNS = [
   {
@@ -37,6 +38,7 @@ const FOOTER_COLUMNS = [
       { label: "Support center", href: "/support" },
       { label: "Delivery & coverage", href: "/delivery" },
       { label: `Email ${SUPPORT_EMAIL}`, href: `mailto:${SUPPORT_EMAIL}` },
+      { label: "WhatsApp +971 52 407 8652", href: `https://wa.me/${WHATSAPP_NUMBER}` },
     ],
   },
 ] as const;

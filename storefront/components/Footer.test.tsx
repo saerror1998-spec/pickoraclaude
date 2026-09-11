@@ -40,6 +40,7 @@ describe("Footer", () => {
       "/delivery",
       "/certification",
       "mailto:hello@pickoraonline.com",
+      "https://wa.me/971524078652",
       "https://www.instagram.com/pickora.online",
       "https://www.tiktok.com/@pickora.online",
     ];
